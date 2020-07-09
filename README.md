@@ -6,7 +6,8 @@ This plugin transforms a Coq goal using the specification language of our automa
 
 Work in progress, works with Coq 8.11.2 (June 2020).
 
-# launching Coq : coqtop -I src -R theories Tuto0
-# inside Coq : Require Import Tuto0.Loader.
+# Quick start
+- launching Coq : coqtop -I src -R theories Tuto0
+- inside Coq : Require Import Tuto0.Loader.
 
 See also : https://github.com/ProjectiveGeometry/ProjectiveGeometry
