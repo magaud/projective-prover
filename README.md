@@ -11,3 +11,5 @@ Work in progress, works with Coq 8.11.2 (June 2020).
 - inside Coq : Require Import Tuto0.Loader.
 
 See also : https://github.com/ProjectiveGeometry/ProjectiveGeometry
+
+Using prouver-pascal directory (calls "main file.stat")
