@@ -5,6 +5,7 @@ theories/Loader.v
 theories/Demo.v
 theories/basic_matroid_list.v
 theories/basic_rank_space_list.v
+theories/lemmas_automation_g.v
 
 src/tuto0_main.ml
 src/tuto0_main.mli
