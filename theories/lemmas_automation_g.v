@@ -1,4 +1,5 @@
 Require Export basic_rank_space_list.
+Require Import Lia.
 
 Ltac clear_ineg_rk :=
 repeat match goal with
@@ -25,7 +26,7 @@ repeat match goal with
 | H : rk ?X = _, H0 : rk ?X <= _ |- _ => clear H0
 | H : rk ?X >= _, H0 : rk ?X >= _ |- _ => clear H
 | H : rk ?X <= _, H0 : rk ?X <= _ |- _ => clear H
-| H : rk ?X >= ?Y, H0 : rk ?X <= ?Y |- _ =>  let HH := fresh in assert(HH : rk X = Y) by (omega)
+| H : rk ?X >= ?Y, H0 : rk ?X <= ?Y |- _ =>  let HH := fresh in assert(HH : rk X = Y) by (lia)
 end.
 
 Lemma le_S_sym : forall n m : nat,
@@ -35,25 +36,16 @@ intros.
 intuition.
 Qed.
 
-Lemma eq_to_ge : forall n m : nat,
-n = m -> n >= m.
+Lemma eq_le_incl : forall n m, n = m -> n <= m.
 Proof.
-intros.
-intuition.
-Qed.
-
-Lemma eq_to_le : forall n m : nat,
-n = m -> n <= m.
-Proof.
-intros.
-intuition.
+  intros; lia.
 Qed.
 
 Ltac solve_hyps_max H H0 :=
 solve[apply matroid1_b_useful;simpl;repeat constructor
 |apply rk_upper_dim
-|apply Nat.eq_le_incl;apply H
-|apply Nat.eq_le_incl;apply eq_sym;apply H
+|apply eq_le_incl;apply H
+|apply eq_le_incl;apply eq_sym;apply H
 |apply H0
 |apply le_S;apply H0
 |apply le_S;apply le_S;apply H0
@@ -63,8 +55,8 @@ solve[apply matroid1_b_useful;simpl;repeat constructor
 Ltac solve_hyps_min H H0:=
 solve[apply matroid1_b_useful2;simpl;repeat constructor
 |apply matroid1_a
-|apply Nat.eq_le_incl;apply H
-|apply Nat.eq_le_incl;apply eq_sym;apply H
+|apply eq_le_incl;apply H
+|apply eq_le_incl;apply eq_sym;apply H
 |apply H0
 |apply le_S_sym;apply H0
 |apply le_S_sym;apply le_S_sym;apply H0
@@ -186,9 +178,9 @@ try clear HP3P4P5m;assert(HP3P4P5m : rk(P3 :: P4 :: P5 :: nil) >= 3).
 	assert(HT := rule_4 (P2 :: P4 :: P5 :: nil) (P3 :: P4 :: P5 :: nil) (P4 :: P5 :: nil) 3 2 2 HP2P3P4P5mtmp HP4P5mtmp HP2P4P5Mtmp Hincl); apply HT.
 }
 
-assert(rk(P3 :: P4 :: P5 ::  nil) <= 3) by (clear_ineg_rk;try omega;try apply rk_upper_dim;try solve[apply matroid1_b_useful;simpl;intuition]).
-assert(rk(P3 :: P4 :: P5 ::  nil) >= 1) by (clear_ineg_rk;try omega;try solve[apply matroid1_b_useful2;simpl;intuition]).
-omega.
+assert(rk(P3 :: P4 :: P5 ::  nil) <= 3) by (clear_ineg_rk;try lia;try apply rk_upper_dim;try solve[apply matroid1_b_useful;simpl;intuition]).
+assert(rk(P3 :: P4 :: P5 ::  nil) >= 1) by (clear_ineg_rk;try lia;try solve[apply matroid1_b_useful2;simpl;intuition]).
+lia.
 Qed.
 
 Lemma rABOo_scheme : forall P1 P2 : Point,
@@ -300,9 +292,9 @@ try clear HP1P2P3P5m;assert(HP1P2P3P5m : rk(P1 :: P2 :: P3 :: P5 :: nil) >= 4).
 	assert(HT := rule_2 (P1 :: P2 :: P3 :: P5 :: nil) (P3 :: P4 :: P5 :: nil) (P3 :: P5 :: nil) 4 2 2 HP1P2P3P4P5mtmp HP3P5mtmp HP3P4P5Mtmp Hincl); apply HT.
 }
 
-assert(rk(P1 :: P2 :: P3 :: P5 ::  nil) <= 4) by (clear_ineg_rk;try omega;try apply rk_upper_dim;try solve[apply matroid1_b_useful;simpl;intuition]).
-assert(rk(P1 :: P2 :: P3 :: P5 ::  nil) >= 1) by (clear_ineg_rk;try omega;try solve[apply matroid1_b_useful2;simpl;intuition]).
-omega.
+assert(rk(P1 :: P2 :: P3 :: P5 ::  nil) <= 4) by (clear_ineg_rk;try lia;try apply rk_upper_dim;try solve[apply matroid1_b_useful;simpl;intuition]).
+assert(rk(P1 :: P2 :: P3 :: P5 ::  nil) >= 1) by (clear_ineg_rk;try lia;try solve[apply matroid1_b_useful2;simpl;intuition]).
+lia.
 Qed.
 
 Lemma rk_line_unification : forall P1 P2 P3,
@@ -320,9 +312,9 @@ try clear HP1P2P3m;assert(HP1P2P3m : rk(P1 :: P2 :: P3 :: nil) >= 2).
 	assert(HT := rule_5 (P1 :: P2 :: nil) (P1 :: P2 :: P3 :: nil) 2 2 HP1P2mtmp Hcomp Hincl); apply HT.
 }
 
-assert(rk(P1 :: P2 :: P3 ::  nil) <= 3) by (clear_ineg_rk;try omega;try apply rk_upper_dim;try solve[apply matroid1_b_useful;simpl;intuition]).
-assert(rk(P1 :: P2 :: P3 ::  nil) >= 1) by (clear_ineg_rk;try omega;try solve[apply matroid1_b_useful2;simpl;intuition]).
-omega.
+assert(rk(P1 :: P2 :: P3 ::  nil) <= 3) by (clear_ineg_rk;try lia;try apply rk_upper_dim;try solve[apply matroid1_b_useful;simpl;intuition]).
+assert(rk(P1 :: P2 :: P3 ::  nil) >= 1) by (clear_ineg_rk;try lia;try solve[apply matroid1_b_useful2;simpl;intuition]).
+lia.
 Qed.
 
 Lemma Desargues : forall P1 P2 P3 P4 P5 P6 P7 P8 P9 P10,
@@ -853,7 +845,7 @@ try clear HP8P9P10M;assert(HP8P9P10M : rk(P8 :: P9 :: P10 :: nil) <= 2).
 	assert(HT := rule_3 (P1 :: P2 :: P3 :: P8 :: P9 :: P10 :: nil) (P4 :: P5 :: P8 :: P9 :: P10 :: nil) (P8 :: P9 :: P10 :: nil) 3 3 4 HP1P2P3P8P9P10Mtmp HP4P5P8P9P10Mtmp HP1P2P3P4P5P8P9P10mtmp Hincl); apply HT.
 }
 
-assert(rk(P8 :: P9 :: P10 ::  nil) <= 3) by (clear_ineg_rk;try omega;try apply rk_upper_dim;try solve[apply matroid1_b_useful;simpl;intuition]).
-assert(rk(P8 :: P9 :: P10 ::  nil) >= 1) by (clear_ineg_rk;try omega;try solve[apply matroid1_b_useful2;simpl;intuition]).
-omega.
+assert(rk(P8 :: P9 :: P10 ::  nil) <= 3) by (clear_ineg_rk;try lia;try apply rk_upper_dim;try solve[apply matroid1_b_useful;simpl;intuition]).
+assert(rk(P8 :: P9 :: P10 ::  nil) >= 1) by (clear_ineg_rk;try lia;try solve[apply matroid1_b_useful2;simpl;intuition]).
+lia.
 Qed.

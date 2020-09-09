@@ -1,5 +1,5 @@
 Require Export List.
-Require Export Omega.
+Require Export Lia.
 Require Export Morphisms.
 
 Parameter Point : Set.
@@ -100,7 +100,7 @@ Lemma matroid1_b_useful : forall (l : list Point) (m : nat), length l <= m -> rk
 Proof.
 intros.
 assert(HH := matroid1_b l).
-omega.
+lia.
 Qed.
 
 Lemma matroid3_useful : forall e e' ei : list Point,
@@ -112,7 +112,7 @@ assert (rk (e ++ e') + rk (list_inter e e') <= rk e + rk e').
 apply matroid3.
 assert (rk (ei) <= rk (list_inter e e')).
 apply matroid2;auto.
-omega.
+lia.
 Qed.
 
 Lemma couple_equal : forall A B, rk(A :: B :: nil) = rk(B :: A :: nil).

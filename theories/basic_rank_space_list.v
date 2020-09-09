@@ -1,4 +1,5 @@
 From Tuto0 Require Export basic_matroid_list.
+Require Import Lia.
 
 Parameter rk_singleton_ge : forall A, rk (A :: nil)  >= 1.
 Parameter rk_couple_ge : forall A B, ~ A = B -> rk(A :: B :: nil) >= 2.
@@ -19,7 +20,7 @@ Proof.
 intros.
 assert(H := rk_singleton_ge A).
 assert(HH := rk_singleton_1 A).
-omega.
+lia.
 Qed.
 
 Lemma matroid1_b_useful2 : forall (l : list Point) (a : Point), length (a :: l) >= 1 -> rk (a :: l) >= 1.
@@ -29,7 +30,7 @@ assert(HH := rk_singleton a).
 assert(HH0 := matroid2 (a :: nil) (a :: l)).
 assert(HH1 : incl (a :: nil) (a :: l));[my_inO|].
 assert(HH2 := HH0 HH1).
-omega.
+lia.
 Qed.
 
 Lemma rk_couple_2 : forall A B, rk(A :: B :: nil) <= 2.
@@ -44,7 +45,7 @@ Proof.
 intros.
 assert(HH := rk_couple_2 A B).
 assert(HH0 := rk_couple_ge A B H).
-omega.
+lia.
 Qed.
 
 Lemma rk_triple_3 : forall A B C : Point, rk (A :: B :: C :: nil) <= 3.
@@ -62,7 +63,7 @@ rewrite H0 in H.
 assert(HH : equivlist (B :: B :: nil) (B :: nil));[my_inO|].
 rewrite HH in H.
 assert(HH0 := rk_singleton_1 B).
-omega.
+lia.
 Qed.
 
 Lemma couple_rk2 : forall A B, rk(A :: B :: nil) = 1 -> A = B.
@@ -73,7 +74,7 @@ intros.
 assumption.
 intros.
 assert(HH := rk_couple A B n).
-omega.
+lia.
 Qed.
 
 Lemma rule_1 : forall A B AiB, forall MA MB mAiB, 
@@ -82,7 +83,7 @@ rk(A ++ B) <= MA + MB - mAiB.
 Proof.
 intros.
 assert(HH := matroid3_useful A B AiB H2).
-omega.
+lia.
 Qed.
 
 Lemma rule_2 : forall A B AiB, forall mAuB mAiB MB, 
@@ -91,7 +92,7 @@ rk(A) >= mAuB + mAiB - MB.
 Proof.
 intros.
 assert(HH := matroid3_useful A B AiB H2).
-omega.
+lia.
 Qed.
 
 Lemma rule_3 : forall A B AiB, forall MA MB mAuB, 
@@ -100,7 +101,7 @@ rk(AiB) <= MA + MB - mAuB.
 Proof.
 intros.
 assert(HH := matroid3_useful A B AiB H2).
-omega.
+lia.
 Qed.
 
 Lemma rule_4 : forall A B AiB, forall mAuB mAiB MA, 
@@ -109,7 +110,7 @@ rk(B) >= mAuB + mAiB - MA.
 Proof.
 intros.
 assert(HH := matroid3_useful A B AiB H2).
-omega.
+lia.
 Qed.
 
 Lemma rule_5 : forall A B, forall mA mB, 
@@ -118,7 +119,7 @@ rk(B) >= mA.
 Proof.
 intros.
 assert(HH := matroid2 A B H1).
-omega.
+lia.
 Qed.
 
 Lemma rule_6 : forall A B, forall MA MB, 
@@ -127,7 +128,7 @@ rk(A) <= MB.
 Proof.
 intros.
 assert(HH := matroid2 A B H1).
-omega.
+lia.
 Qed.
 
 Lemma rule_7 : forall A B, forall mA mB, 
@@ -136,7 +137,7 @@ rk(A) >= mB.
 Proof.
 intros.
 assert(HH := matroid2 B A H1).
-omega.
+lia.
 Qed.
 
 Lemma rule_8 : forall A B, forall MA MB, 
@@ -145,7 +146,7 @@ rk(B) <= MA.
 Proof.
 intros.
 assert(HH := matroid2 B A H1).
-omega.
+lia.
 Qed.
 
 Parameter rk_pappus : forall A B C D E F G H I,
