@@ -1,33 +1,37 @@
 open Pp
 open Ppconstr
 open EConstr
-
+(*open Libnames
+open Names
+open CErrors*)
+   
 let message = "Hello world!"
 
 (** Coq constants useful in the tactic *)
-            
+let find_reference = Coqlib.find_reference [@ocaml.warning "-3"]
+                   
 let coq_eq () = let x = Coqlib.lib_ref "core.eq.type" in
                 EConstr.of_constr (Globnames.printable_constr_of_global x)
 
-let coq_nil () = let x = Coqlib.find_reference "Coq" ["Coq";"Init";"Datatypes"] "nil" in  
+let coq_nil () = let x = find_reference "Coq" ["Coq";"Init";"Datatypes"] "nil" in  
                 EConstr.of_constr (Globnames.printable_constr_of_global x)
 
-let coq_cons () = let x = Coqlib.find_reference "Coq" ["Coq";"Init";"Datatypes"] "cons" in 
+let coq_cons () = let x = find_reference "Coq" ["Coq";"Init";"Datatypes"] "cons" in 
                   EConstr.of_constr (Globnames.printable_constr_of_global x)
                   
-let coq_O () = let x = Coqlib.find_reference "Coq" ["Coq";"Init";"Datatypes"] "O" in  
+let coq_O () = let x = find_reference "Coq" ["Coq";"Init";"Datatypes"] "O" in  
                 EConstr.of_constr (Globnames.printable_constr_of_global x)
 
-let coq_S () = let x = Coqlib.find_reference "Coq" ["Coq";"Init";"Datatypes"] "S" in  
+let coq_S () = let x = find_reference "Coq" ["Coq";"Init";"Datatypes"] "S" in  
                 EConstr.of_constr (Globnames.printable_constr_of_global x)
 
 let coq_point () = 
-  let x = Coqlib.find_reference "Tuto0" ["Tuto0";"basic_matroid_list"] "Point" in 
+  let x = find_reference "Tuto0" ["Tuto0";"basic_matroid_list"] "Point" in 
   EConstr.of_constr (Globnames.printable_constr_of_global x)
 (* to be fixed using lib_ref ? *)
 
 let coq_rk () =
-  let x = Coqlib.find_reference "Tuto0" ["Tuto0";"basic_matroid_list"] "rk" in
+  let x = find_reference "Tuto0" ["Tuto0";"basic_matroid_list"] "rk" in
   EConstr.of_constr (Globnames.printable_constr_of_global x)
 
 (* the following 2 variables will be instantiated by the arguments of the tactic *)             
@@ -57,15 +61,106 @@ let text_to_send gl env sigma l =
           "conclusion\n"^
       "end"
      *)
-                      
-let send_text text_to_send =
-  let file_name = "blabla" in 
-  let c = open_out file_name in
+
+(*let my_vernac_flag = "deprecated", Attributes.VernacFlagList ["", Attributes.VernacFlagEmpty]*)
+                            
+(*let vernac_require' from export qidl =
+
+  Attributes.unsupported_attributes [Attributes.vernac_monomorphic_flag];
+  Vernacentries.vernac_require from export qidl*)
+(*
+let err_notfound_library ?from qid =
+  let prefix = match from with
+  | None -> str "."
+  | Some from ->
+    str " with prefix " ++ DirPath.print from ++ str "."
+  in
+  let bonus =
+    if !Flags.load_vos_libraries then " (While searching for a .vos file.)" else "" in
+  user_err ?loc:qid.CAst.loc ~hdr:"locate_library"
+     (strbrk "Unable to locate library " ++ pr_qualid qid ++ prefix ++ str bonus)
+
+let err_unmapped_library ?from qid =
+  let dir = fst (repr_qualid qid) in
+  let prefix = match from with
+    | None -> str "."
+    | Some from ->
+       str " and prefix " ++ DirPath.print from ++ str "."
+  in
+  user_err ?loc:qid.CAst.loc
+           ~hdr:"locate_library"
+    (strbrk "Cannot find a physical path bound to logical path matching suffix " ++
+       DirPath.print dir ++ prefix)
+  
+let my_vernac_require from import qidl =
+  let lib_resolver = Loadpath.try_locate_absolute_library in
+  let root = match from with
+    | None -> None
+    | Some from ->
+       let (hd, tl) = Libnames.repr_qualid from in
+       Some (Libnames.add_dirpath_suffix hd tl)
+  in
+  let locate qid =
+    let open Loadpath in
+    let warn = not !Flags.quiet in
+    match locate_qualified_library ?root ~warn qid with
+    | Ok (_,dir,f) -> dir, f
+    | Error LibUnmappedDir -> err_unmapped_library ?from:root qid
+    | Error LibNotFound -> err_notfound_library ?from:root qid
+  in let modrefl = List.map locate qidl 
+  in Library.require_library_from_dirpath ~lib_resolver modrefl import
+ *)
+let send_text name text_to_send =
+
+  (* let _ = Unix.chdir ("theories") in *)
+  let input_file = "theories/draft_"^name in
+  let result_file = "theories/pprove_"^name in 
+  let c = open_out input_file in
   let _ = output_string c text_to_send in
   let _ = flush c in
   let _ = close_out c in 
-  Unix.system ("/Users/magaud/prouveur-pascal/bin/main "^file_name)
+  let _ = Unix.system ("/Users/magaud/prouveur-pascal/bin/main "^input_file) in 
+  let cmd = Filename.quote_command "echo" ~stdout:(result_file^".v") ["Require Import lemmas_automation_g."] in
+  let _ = Unix.system(cmd) in
+  let _ = Unix.system ("cat "^input_file^".v >> "^result_file^".v") in
 
+  let _ = Unix.system("grep Lemma "^result_file^".v | awk '{print $2}' > tgvqsd48") in
+  let c = open_in "tgvqsd48" in
+  let lemma_name = input_line c (*"LP1P2P3" *) in
+  let _ = (Feedback.msg_notice (str lemma_name)) in 
+  let _ = Unix.system("rm -f tgvqsd48") in 
+  let _ = Unix.system ("echo Hint Resolve "^lemma_name^" : ranks. >> "^result_file^".v") in
+
+  (*  let _  = Unix.chdir("..") in *)
+  let cmd = Filename.quote_command "coqc" ["-q"; "-I"; "src"; "-R"; "theories"; "Tuto0";(result_file^".v")] in
+  let _ = Unix.system(cmd) in
+  let (a,b) = match (String.split_on_char '/' result_file) with [a;b] -> (a,b) | _ -> failwith "erreur" in
+  let _ = Unix.system("rm -f "^input_file) in
+  let _ = Unix.system("rm -f "^input_file^".out") in
+  let _ = Unix.system("rm -f "^input_file^".v") in
+  
+
+  let _ = (Feedback.msg_notice (str ("Proofs are available in file "^result_file^".v. Please run the followings commands/tactics to complete the proof:\n Require Import "^b^". \n eauto with ranks. ") ))
+   (*
+  let _ = (Feedback.msg_notice (str "require import blabla")) in
+    let (a,b) = match (String.split_on_char '/' result_file) with [a;b] -> (a,b) | _ -> failwith "erreur" in
+  let qidl = [(Libnames.qualid_of_string b)] in 
+  
+  let _ = my_vernac_require None (Some true) qidl in *)
+  (* let _ = Library.require_library_from_dirpath [ (Stm.get_ldir ()), (result_file^".v")) ] (Some true) in *)
+ 
+(*
+VtDefault(fun () ->
+        unsupported_attributes atts;
+        vernac_require from export qidl)
+*)
+(*  let _ = vernac_require'
+            None (*(Some (Libnames.qualid_of_string ("Tuto0")))*)
+            (Some false)
+            [(Libnames.qualid_of_string b)] in*)
+(*  (Feedback.msg_notice (str "success"))*)
+  in Tacticals.New.tclIDTAC
+   
 let rec aff gl env sigma l =
   match l with
     (x,y)::xs ->
@@ -143,47 +238,88 @@ let rec myflatten l =
           match l with
             [] -> ""
           | x::xs -> if x="" then myflatten xs else x^"\n"^(myflatten xs);;
-                           
-
-            let pprove () =
+  
+let pprove () =
   let _ = Feedback.msg_notice (str "proving...") in
-  Proofview.Goal.enter begin fun gl ->
-             let env = Proofview.Goal.env gl in
-             let sigma = Tacmach.New.project gl in
-             let concl = Tacmach.New.pf_concl gl in
-             let raw_list = Tacmach.New.pf_hyps_types gl (*(Id.t * types) list*) in
-             let points = (mk_string (List.map Names.Id.to_string (List.rev (list_of_points gl env sigma raw_list)))) in 
-             let ranks = myflatten (List.map (fun (i,t) -> interp_hyp_or_concl gl env sigma t) raw_list) in
-             let conc = (interp_hyp_or_concl gl env sigma concl) in 
-             let text_to_send =
-               "context\n  dimension "^(string_of_int dimension)^"\n"^
-                 "  layers "^(string_of_int layer)^"\nendofcontext\n"^"layer 0\n"^
-                   " points\n"^
-                     points^"\n"^
-                       " hypotheses\n"^
-                         ranks^
-                         " conclusion\n"^
-                           conc^"\n"^
-                           "endoflayer\n"^
-                             "conclusion\n"^
-                               conc^"\n"^
-                               "end" in 
+  Proofview.Goal.enter
+    begin fun gl ->
+    (*let s = Stm.get_current_state (Stm.get_doc 0) in *)
+    (*  let s = Proofview_monad.StateStore.empty in (*Proofview_monad.StateStore.with_empty_state gl in *)*)
+    let proof_name = Names.Id.to_string (Vernacstate.Declare.get_current_proof_name ()) in 
+    let _ = (Feedback.msg_notice (str proof_name)) in
+    let env = Proofview.Goal.env gl in
+    let sigma = Tacmach.New.project gl in
+    let concl = Tacmach.New.pf_concl gl in
+    let raw_list = Tacmach.New.pf_hyps_types gl (*(Id.t * types) list*) in
+    let points = (mk_string (List.map Names.Id.to_string (List.rev (list_of_points gl env sigma raw_list)))) in 
+    let ranks = myflatten (List.map (fun (i,t) -> interp_hyp_or_concl gl env sigma t) raw_list) in
+    let conc = (interp_hyp_or_concl gl env sigma concl) in 
+    let text_to_send =
+      "context\n  dimension "^(string_of_int dimension)^"\n"^
+        "  layers "^(string_of_int layer)^"\nendofcontext\n"^"layer 0\n"^
+          " points\n"^
+            points^"\n"^
+              " hypotheses\n"^
+                ranks^
+                  " conclusion\n"^
+                    conc^"\n"^
+                      "endoflayer\n"^
+                        "conclusion\n"^
+                          conc^"\n"^
+                            "end" in 
+    
+    
+    (* let list_points = (list_of_points gl env sigma raw_list) in
+       let list_ranks = ["";""] in *)
+    let _ = aff gl env sigma raw_list      in (*        (Feedback.msg_notice (Printer.pr_named_decl env sigma lh);*)
+    let _ = show_points gl env sigma (list_of_points gl env sigma raw_list) in
+    (*let _ = interp_rk gl env sigma concl in*)
+    (*let n = let (f,a)= destApp sigma concl in a.(2) in 
+      let v = interp_nat gl env sigma n in
+      let _ =  (Feedback.msg_notice (str (string_of_int v))) in*)
+    let _ =  (Feedback.msg_notice (str (interp_hyp_or_concl gl env sigma concl))) in
+    let _ = send_text proof_name text_to_send in
+    (*let ml_load_path, vo_load_path = build_load_path opts in
+    let injections = injection_commands opts in
+    let stm_options = opts.config.stm_flags in*)
+   (* let _ =  (Feedback.msg_notice (str "la stm maintenant...")) in
+    (*let open Stm in
+    let p = States.freeze ~marshallable:true in *)
+    let f = Stm.TopLogical Coqargs.default_toplevel in (*(Stm.TopLogical (Names.DirPath.make [])) in*)
+    let open Vernac.State in
+    let _ =  (Feedback.msg_notice (str "encore vivante 1...")) in
+    let ml_load_path, vo_load_path = Coqargs.build_load_path Coqargs.default in
+    let  _ = if (ml_load_path = [])  then (Feedback.msg_notice (str "vide...")) else (Feedback.msg_notice (str "pasvide...")) 
+    in 
+    let injections = Coqargs.injection_commands Coqargs.default in
+    let _ =  (Feedback.msg_notice (str "encore vivante 2...")) in
+    let stm_options =  Stm.AsyncOpts.default_opts in
+    let _ =  (Feedback.msg_notice (str "encore vivante 2bis...")) in
+    let p = Stm.new_doc in
+    let _ =  (Feedback.msg_notice (str "encore vivante 2 here...")) in
+    
+      let doc, sid = Topfmt.(in_phase ~phase:InteractiveLoop)
+          p
+          Stm.{ doc_type = Interactive f; ml_load_path;
+                vo_load_path; injections; stm_options;
+                   } in
+    let _ =  (Feedback.msg_notice (str "encore vivante 2ter...")) in
+    let s = { doc; sid; proof = None; time = true } in
+    let _ =  (Feedback.msg_notice (str "encore vivante 3...")) in
+    try (
+      let _ =  Vernac.load_vernac ~echo:false ~check:false ~interactive:false ~state:s "blublu.v" in *)
+    (* grep Lemma theories/blaxbla2.v |  awk '{print $2}' *)
+(*
+let _ = let x = Coqlib.find_reference "Tuto0" ["Tuto0";"blaxbla2"] "LP1P2P3" in 
+            EConstr.of_constr (Globnames.printable_constr_of_global x) in*)
+Tacticals.New.tclIDTAC
+  (*Tactics.eapply lemma*)
+               (*Tacticals.New.tclTHEN (Tactics.eapply lemma) Tacticals.New.tclIDTAC (*(Eauto.e_assumption)*)*)
+    end
+    (* val load_vernac : echo:bool -> check:bool -> interactive:bool ->
+  state:   State.t -> string -> State.t *)
 
-               
-            (* let list_points = (list_of_points gl env sigma raw_list) in
-             let list_ranks = ["";""] in *)
-             let _ = aff gl env sigma raw_list      in (*        (Feedback.msg_notice (Printer.pr_named_decl env sigma lh);*)
-             let _ = show_points gl env sigma (list_of_points gl env sigma raw_list) in
-             (*let _ = interp_rk gl env sigma concl in*)
-             (*let n = let (f,a)= destApp sigma concl in a.(2) in 
-             let v = interp_nat gl env sigma n in
-              let _ =  (Feedback.msg_notice (str (string_of_int v))) in*)
-             let _ =  (Feedback.msg_notice (str (interp_hyp_or_concl gl env sigma concl))) in
-             let _ = send_text text_to_send in
-             Tacticals.New.tclIDTAC
-             end
-
-  (*
+    (*
 context
       dimension 3
       layers 1
