@@ -13,6 +13,7 @@ Work in progress, works with Coq 8.12.2 (December 2020).
 See also : https://github.com/ProjectiveGeometry/ProjectiveGeometry
 
 Using prouver-pascal directory (calls "main file.stat")
+See https://github.com/pascalschreck/MatroidIncidenceProver for the implementation of the saturation procedure and the generation of the Coq script.
 
 # TODO
 - ignore hypotheses which are not of the form rk(?e)=?v
