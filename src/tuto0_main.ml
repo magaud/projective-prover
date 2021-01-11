@@ -140,7 +140,7 @@ let send_text name text_to_send =
   let _ = Unix.system("rm -f "^input_file^".v") in
   
 
-  let _ = (Feedback.msg_notice (str ("Proofs are available in file "^result_file^".v. Please run the followings commands/tactics to complete the proof:\n Require Import "^b^". \n eauto with ranks. ") ))
+  let _ = (Feedback.msg_notice (str ("Proofs are available in file "^result_file^".v. Please run the followings commands/tactics to complete the proof:\n Require Import "^b^". \n solve_using "^lemma_name^". ") ))
    (*
   let _ = (Feedback.msg_notice (str "require import blabla")) in
     let (a,b) = match (String.split_on_char '/' result_file) with [a;b] -> (a,b) | _ -> failwith "erreur" in

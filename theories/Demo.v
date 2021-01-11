@@ -1,4 +1,5 @@
 From Tuto0 Require Export Loader.
+Require Import Ltac_utils.
 
 Locate Point.
 
@@ -15,7 +16,7 @@ Proof.
   (* call the prover *)
   pprove.
   Require Import pprove_ex1.
-  eauto with ranks.
+  solve_using LP1P2P3. 
 Qed.
 Check ex1.
 
@@ -46,8 +47,6 @@ forall rbcalpha : rk(triple b c alpha)=2,
 forall raA : rk(a:: A :: nil)=2,
 forall rcC : rk(c:: C :: nil)=2,
 forall rbB : rk(b:: B:: nil)=2,
-(*  rk(a::b::c::nil)=3 ->
-  rk(A::B::C::nil)=3 ->*)
   
   rk(O::a::nil)=2->
   rk(O::b::nil)=2->
@@ -62,6 +61,6 @@ Proof.
   intros.
   pprove.
   Require Import pprove_desargues. 
-  eauto with ranks.
+  solve_using LP7P8P9.
 Qed.
   
