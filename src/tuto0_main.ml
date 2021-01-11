@@ -121,23 +121,28 @@ let send_text name text_to_send =
   let _ = output_string c text_to_send in
   let _ = flush c in
   let _ = close_out c in
-  (* alternative prover available:  /Users/magaud/MatroidIncidenceProver/matroidbasedIGprover/matroid_C_Coq/DevC/bin *)
-  let _ = Unix.system ("/Users/magaud/prouveur-pascal/bin/main "^input_file^ " > /dev/null 2> /dev/null") in 
+  (*let prover_name = "/Users/magaud/MatroidIncidenceProver/matroidbasedIGprover/matroid_C_Coq/DevC/bin/main" in*)
+(* alternative prover available:  /Users/magaud/MatroidIncidenceProver/matroidbasedIGprover/matroid_C_Coq/DevC/bin/main *)
+  let prover_name = "/Users/magaud/prouveur-pascal/bin/main" in 
+  let _ = Unix.system (prover_name^" "^input_file^ " > /dev/null 2> /dev/null") in 
   let cmd = Filename.quote_command "echo" ~stdout:(result_file^".v") ["Require Import lemmas_automation_g."] in
   let _ = Unix.system(cmd) in
   let _ = Unix.system ("cat "^input_file^".v >> "^result_file^".v") in
 
   let _ = Unix.system("grep Lemma "^result_file^".v | awk '{print $2}' > tgvqsd48") in
-  let c = open_in "tgvqsd48" in
+  let _ = Unix.system("tail -1 tgvqsd48 > tgvqsd49") in 
+  let c = open_in "tgvqsd49" in
   let lemma_name = input_line c (*"LP1P2P3" *) in
   let _ = if !debug then (Feedback.msg_notice (str lemma_name)) in 
   let _ = Unix.system("rm -f tgvqsd48") in 
+  let _ = Unix.system("rm -f tgvqsd49") in 
   (*  let _ = Unix.system ("echo Hint Resolve "^lemma_name^" : ranks. >> "^result_file^".v") in*)
 
   (*  let _  = Unix.chdir("..") in *)
   let cmd = Filename.quote_command "coqc" ["-q"; "-I"; "src"; "-R"; "theories"; "Tuto0";(result_file^".v")] in
   let _ = Unix.system(cmd) in
-  let _ = Unix.system("ls "^result_file^".v") in 
+  let _ = Unix.system("ls "^result_file^".v") in
+  let _ = Unix.system("ls "^result_file^".vo") in
   let (a,b) = match (String.split_on_char '/' result_file) with [a;b] -> (a,b) | _ -> failwith "erreur" in
   let _ = Unix.system("rm -f "^input_file) in
   let _ = Unix.system("rm -f "^input_file^".out") in
