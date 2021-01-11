@@ -17,7 +17,7 @@ desargues4D_with_preamble_fixed.v
 
 # to be checked ?
 
-simple_lemma.v
+#simple_lemma.v
 
 #last_try.v # does not compile
 #dg2pappus_all_lemmas.v # does not compile
@@ -26,7 +26,7 @@ simple_lemma.v
 #dg2pappus_alt.v # does not compile
 #dg2pappus_alt_1l.v # does not compile
 
-exemple_pb.v
-exemple_pb2.v
+#exemple_pb.v # rk not defined
+#exemple_pb2.v # rk not defined
 sunday.v
 wednesday.v
