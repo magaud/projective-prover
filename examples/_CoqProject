@@ -1,0 +1,32 @@
+# definitions and settings
+basic_matroid_list.v
+basic_rank_space_list.v
+lemmas_automation_g.v
+
+# tools
+ltac_modulo.v
+
+# examples 3D
+pascal.v
+monday.v
+
+dg2pappusAlt1l.v # DG -> Pappus
+
+#examples 4D (definitions and settings are inlined) 
+desargues4D_with_preamble_fixed.v
+
+# to be checked ?
+
+simple_lemma.v
+
+#last_try.v # does not compile
+#dg2pappus_all_lemmas.v # does not compile
+#dg2pappus_alt_alt.v
+#dg2pappus_alt_alt_vendredi.v
+#dg2pappus_alt.v # does not compile
+#dg2pappus_alt_1l.v # does not compile
+
+exemple_pb.v
+exemple_pb2.v
+sunday.v
+wednesday.v

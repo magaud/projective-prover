@@ -144,6 +144,7 @@ Proof.
 Qed.
 
 (* manual proof *)
+(*
 eapply (LP7P8P9 a b c A B C alpha beta gamma O); try eassumption.
   intros; eapply LP7P8P9.
   eassumption.
@@ -181,3 +182,4 @@ apply H1.
 rewrite r3.
 apply rcCO.
 Qed.
+*)
