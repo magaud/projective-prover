@@ -15,5 +15,6 @@ See also : https://github.com/ProjectiveGeometry/ProjectiveGeometry
 Using prouver-pascal directory (calls "main file.stat")
 
 # TODO
+- ignore hypotheses which are not of the form rk(?e)=?v
+
 - replace "find_reference" with "Coqlib.lib_ref"
-- remove debugging/error messages

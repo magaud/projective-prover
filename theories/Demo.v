@@ -20,6 +20,20 @@ Proof.
 Qed.
 Check ex1.
 
+Lemma ex2 : forall A B C D:Point,
+    rk(A::D::B::nil) = 3 ->
+    rk(A::C::D::nil) = 2 ->
+    rk(C::A::nil) = 2 ->
+    rk(C::D::nil) = 2 ->
+    rk(A::C::B::nil) = 3.
+Proof.
+  intros.
+  (* call the prover *)
+  pprove.
+  Require Import pprove_ex2.
+  solve_using LP1P2P3. 
+Qed.
+Check ex2.
 
 Definition triple (X Y Z : Point) : (list Point) := (X :: Y :: Z :: nil).
 

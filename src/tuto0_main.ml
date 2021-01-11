@@ -4,7 +4,9 @@ open EConstr
 (*open Libnames
 open Names
 open CErrors*)
-   
+
+let debug = ref false
+          
 let message = "Hello world!"
 
 (** Coq constants useful in the tactic *)
@@ -118,8 +120,9 @@ let send_text name text_to_send =
   let c = open_out input_file in
   let _ = output_string c text_to_send in
   let _ = flush c in
-  let _ = close_out c in 
-  let _ = Unix.system ("/Users/magaud/prouveur-pascal/bin/main "^input_file) in 
+  let _ = close_out c in
+  (* alternative prover available:  /Users/magaud/MatroidIncidenceProver/matroidbasedIGprover/matroid_C_Coq/DevC/bin *)
+  let _ = Unix.system ("/Users/magaud/prouveur-pascal/bin/main "^input_file^ " > /dev/null 2> /dev/null") in 
   let cmd = Filename.quote_command "echo" ~stdout:(result_file^".v") ["Require Import lemmas_automation_g."] in
   let _ = Unix.system(cmd) in
   let _ = Unix.system ("cat "^input_file^".v >> "^result_file^".v") in
@@ -127,13 +130,14 @@ let send_text name text_to_send =
   let _ = Unix.system("grep Lemma "^result_file^".v | awk '{print $2}' > tgvqsd48") in
   let c = open_in "tgvqsd48" in
   let lemma_name = input_line c (*"LP1P2P3" *) in
-  let _ = (Feedback.msg_notice (str lemma_name)) in 
+  let _ = if !debug then (Feedback.msg_notice (str lemma_name)) in 
   let _ = Unix.system("rm -f tgvqsd48") in 
-  let _ = Unix.system ("echo Hint Resolve "^lemma_name^" : ranks. >> "^result_file^".v") in
+  (*  let _ = Unix.system ("echo Hint Resolve "^lemma_name^" : ranks. >> "^result_file^".v") in*)
 
   (*  let _  = Unix.chdir("..") in *)
   let cmd = Filename.quote_command "coqc" ["-q"; "-I"; "src"; "-R"; "theories"; "Tuto0";(result_file^".v")] in
   let _ = Unix.system(cmd) in
+  let _ = Unix.system("ls "^result_file^".v") in 
   let (a,b) = match (String.split_on_char '/' result_file) with [a;b] -> (a,b) | _ -> failwith "erreur" in
   let _ = Unix.system("rm -f "^input_file) in
   let _ = Unix.system("rm -f "^input_file^".out") in
@@ -179,12 +183,12 @@ let rec show_points gl env sigma l =
 (* (rk (A :: B :: C :: nil) = 3) *)
 
 let rec points gl env sigma l =
-  let _ = (Feedback.msg_notice (str "le terme en entree")) in 
-  let _ = (Feedback.msg_notice (Printer.pr_econstr_env env sigma (l))) in 
+  let _ = if !debug then (Feedback.msg_notice (str "le terme en entree")) in 
+  let _ = if !debug then (Feedback.msg_notice (Printer.pr_econstr_env env sigma (l))) in 
   let (f,a) = destApp sigma l in
-  let _ = (Feedback.msg_notice (Printer.pr_econstr_env env sigma (f))) in
-  let _ = (Feedback.msg_notice (str "blabla")) in 
-  let _ = (Feedback.msg_notice (Printer.pr_econstr_env env sigma (a.(0)))) in
+  let _ = if !debug then (Feedback.msg_notice (Printer.pr_econstr_env env sigma (f))) in
+  let _ = if !debug then (Feedback.msg_notice (str "blabla")) in 
+  let _ = if !debug then (Feedback.msg_notice (Printer.pr_econstr_env env sigma (a.(0)))) in
 (*  let _ = (Feedback.msg_notice (Printer.pr_econstr_env env sigma (a.(1)))) in
   let _ = (Feedback.msg_notice (Printer.pr_econstr_env env sigma (a.(2)))) in*)
   if Tacmach.New.pf_conv_x gl f (coq_nil()) then []
@@ -197,19 +201,19 @@ let rec points gl env sigma l =
 let interp_rk gl env sigma c =
   let (g,b) = destApp sigma c in
        if Tacmach.New.pf_conv_x gl g (coq_rk ())
-       then let _ = (Feedback.msg_notice (str "reconnaitre eq + rk : ok")) in 
+       then let _ = if !debug then (Feedback.msg_notice (str "reconnaitre eq + rk : ok")) in 
             let  args = (Array.to_list b) in
-            let _ = (Feedback.msg_notice (str ("args of rk : ok length = "^(string_of_int (List.length args))))) in
+            let _ = if !debug then (Feedback.msg_notice (str ("args of rk : ok length = "^(string_of_int (List.length args))))) in
             let p = points gl env sigma (List.hd args) in
-            let _ = (Feedback.msg_notice (str "alles gut")) in
-            let _ = (Feedback.msg_notice (str (mk_string (List.map (fun x -> Names.Id.to_string (destVar sigma x)) p))))
+            let _ = if !debug then (Feedback.msg_notice (str "alles gut")) in
+            let _ = if !debug then (Feedback.msg_notice (str (mk_string (List.map (fun x -> Names.Id.to_string (destVar sigma x)) p))))
             in (mk_string (List.map (fun x -> Names.Id.to_string (destVar sigma x)) p))
        else failwith "not a rank term" (*(Feedback.msg_notice (str "pas rk"))*)
  
 
 let rec interp_nat gl env sigma c =
- let _ = (Feedback.msg_notice (str "entier en entree")) in 
- let _ = (Feedback.msg_notice (Printer.pr_econstr_env env sigma (c))) in
+ let _ = if !debug then (Feedback.msg_notice (str "entier en entree")) in 
+ let _ = if !debug then (Feedback.msg_notice (Printer.pr_econstr_env env sigma (c))) in
  if Tacmach.New.pf_conv_x gl c (coq_O ())
  then 0
  else let (f,a) = destApp sigma c in
@@ -218,15 +222,15 @@ let rec interp_nat gl env sigma c =
       else failwith "error: interp_nat"
    
 let interp_hyp_or_concl gl env sigma c =
-  let _ = (Feedback.msg_notice (str "interp_hyp_or_concl")) in
-  let _ =   (Feedback.msg_notice (Printer.pr_econstr_env env sigma c)) in 
+  let _ = if !debug then (Feedback.msg_notice (str "interp_hyp_or_concl")) in
+  let _ =  if !debug then (Feedback.msg_notice (Printer.pr_econstr_env env sigma c)) in 
   if isApp sigma c then 
     let (f,a) = destApp sigma c in
     if Tacmach.New.pf_conv_x gl f (coq_eq ())
     then 
-      let _ =   (Feedback.msg_notice (Printer.pr_econstr_env env sigma (a.(0)))) in 
-      let _ =   (Feedback.msg_notice (Printer.pr_econstr_env env sigma (a.(1)))) in
-      let _ =   (Feedback.msg_notice (Printer.pr_econstr_env env sigma (a.(2)))) in
+      let _ =  if !debug then (Feedback.msg_notice (Printer.pr_econstr_env env sigma (a.(0)))) in 
+      let _ =  if !debug then (Feedback.msg_notice (Printer.pr_econstr_env env sigma (a.(1)))) in
+      let _ =  if !debug then (Feedback.msg_notice (Printer.pr_econstr_env env sigma (a.(2)))) in
       let r = interp_rk gl env sigma a.(1) in
       let n = interp_nat gl env sigma a.(2) in
       r^" : "^(string_of_int n)
@@ -240,13 +244,13 @@ let rec myflatten l =
           | x::xs -> if x="" then myflatten xs else x^"\n"^(myflatten xs);;
   
 let pprove () =
-  let _ = Feedback.msg_notice (str "proving...") in
+  let _ = if !debug then Feedback.msg_notice (str "proving...") in
   Proofview.Goal.enter
     begin fun gl ->
     (*let s = Stm.get_current_state (Stm.get_doc 0) in *)
     (*  let s = Proofview_monad.StateStore.empty in (*Proofview_monad.StateStore.with_empty_state gl in *)*)
     let proof_name = Names.Id.to_string (Vernacstate.Declare.get_current_proof_name ()) in 
-    let _ = (Feedback.msg_notice (str proof_name)) in
+    let _ = if !debug then (Feedback.msg_notice (str proof_name)) in
     let env = Proofview.Goal.env gl in
     let sigma = Tacmach.New.project gl in
     let concl = Tacmach.New.pf_concl gl in
@@ -271,13 +275,13 @@ let pprove () =
     
     (* let list_points = (list_of_points gl env sigma raw_list) in
        let list_ranks = ["";""] in *)
-    let _ = aff gl env sigma raw_list      in (*        (Feedback.msg_notice (Printer.pr_named_decl env sigma lh);*)
-    let _ = show_points gl env sigma (list_of_points gl env sigma raw_list) in
+    let _ = if !debug then aff gl env sigma raw_list      in (*        (Feedback.msg_notice (Printer.pr_named_decl env sigma lh);*)
+    let _ = if !debug then show_points gl env sigma (list_of_points gl env sigma raw_list) in
     (*let _ = interp_rk gl env sigma concl in*)
     (*let n = let (f,a)= destApp sigma concl in a.(2) in 
       let v = interp_nat gl env sigma n in
       let _ =  (Feedback.msg_notice (str (string_of_int v))) in*)
-    let _ =  (Feedback.msg_notice (str (interp_hyp_or_concl gl env sigma concl))) in
+    let _ =  if !debug then (Feedback.msg_notice (str (interp_hyp_or_concl gl env sigma concl))) in
     let _ = send_text proof_name text_to_send in
     (*let ml_load_path, vo_load_path = build_load_path opts in
     let injections = injection_commands opts in
