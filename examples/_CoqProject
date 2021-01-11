@@ -28,5 +28,5 @@ desargues4D_with_preamble_fixed.v
 
 #exemple_pb.v # rk not defined
 #exemple_pb2.v # rk not defined
-sunday.v
-wednesday.v
+#sunday.v # does not compile
+#wednesday.v # does not compile
