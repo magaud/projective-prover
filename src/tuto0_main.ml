@@ -113,7 +113,11 @@ let my_vernac_require from import qidl =
   in Library.require_library_from_dirpath ~lib_resolver modrefl import
  *)
 let send_text name text_to_send =
-
+  let already_exists = Sys.file_exists ("theories/pprove_"^name^".vo") in
+  if already_exists
+  then let _ = Feedback.msg_notice (str ("Already computed and ready to be reused. In case it fails, remove the file theories/pprove_"^name^".vo."))
+       in Tacticals.New.tclIDTAC
+  else
   (* let _ = Unix.chdir ("theories") in *)
   let input_file = "theories/draft_"^name in
   let result_file = "theories/pprove_"^name in 
@@ -121,12 +125,12 @@ let send_text name text_to_send =
   let _ = output_string c text_to_send in
   let _ = flush c in
   let _ = close_out c in
-  (*let prover_name = "/Users/magaud/MatroidIncidenceProver/matroidbasedIGprover/matroid_C_Coq/DevC/bin/main" in*)
+  let prover_name = "/Users/magaud/MatroidIncidenceProver/matroidbasedIGprover/matroid_C_Coq/DevC/bin/main" in
 (* alternative prover available:  /Users/magaud/MatroidIncidenceProver/matroidbasedIGprover/matroid_C_Coq/DevC/bin/main *)
-  let prover_name = "/Users/magaud/prouveur-pascal/bin/main" in 
+  (*let prover_name = "/Users/magaud/prouveur-pascal/bin/main" in *)
   let _ = Unix.system (prover_name^" "^input_file^ " > /dev/null 2> /dev/null") in 
-  let cmd = Filename.quote_command "echo" ~stdout:(result_file^".v") ["Require Import lemmas_automation_g."] in
-  let _ = Unix.system(cmd) in
+  (*let cmd = Filename.quote_command "echo" ~stdout:(result_file^".v") ["Require Import lemmas_automation_g."] in
+  let _ = Unix.system(cmd) in*)
   let _ = Unix.system ("cat "^input_file^".v >> "^result_file^".v") in
 
   let _ = Unix.system("grep Lemma "^result_file^".v | awk '{print $2}' > tgvqsd48") in

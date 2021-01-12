@@ -35,6 +35,16 @@ Proof.
 Qed.
 Check ex2.
 
+Lemma ex3 : forall A B C D ,
+rk(A :: C ::  nil) = 2 -> rk(A :: B :: D ::  nil) = 2 -> rk(C :: D ::  nil) = 2 ->
+rk(A :: C :: D ::  nil) = 2 -> rk(C :: A ::  nil) = 2.
+Proof.
+  intros.
+  pprove.
+  Require Import pprove_ex3.
+  solve_using LP1P3. 
+Qed.
+
 Definition triple (X Y Z : Point) : (list Point) := (X :: Y :: Z :: nil).
 
 Lemma desargues : forall a b c A B C alpha beta gamma O : Point,

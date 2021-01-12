@@ -9,6 +9,8 @@ ltac_modulo.v
 # examples 3D
 pascal.v
 monday.v
+simple_lemma.v
+s.v
 
 dg2pappusAlt1l.v # DG -> Pappus
 
@@ -16,17 +18,6 @@ dg2pappusAlt1l.v # DG -> Pappus
 desargues4D_with_preamble_fixed.v
 
 # to be checked ?
-
-#simple_lemma.v
-
-#last_try.v # does not compile
-#dg2pappus_all_lemmas.v # does not compile
-#dg2pappus_alt_alt.v
-#dg2pappus_alt_alt_vendredi.v
-#dg2pappus_alt.v # does not compile
-#dg2pappus_alt_1l.v # does not compile
-
-#exemple_pb.v # rk not defined
-#exemple_pb2.v # rk not defined
-#sunday.v # does not compile
-#wednesday.v # does not compile
+pascal_exemple_pb_stat.v
+exemple_pb.v 
+exemple_pb2.v 
