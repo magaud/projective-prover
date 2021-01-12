@@ -10,10 +10,13 @@ Work in progress, works with Coq 8.12.2 (December 2020).
 - launching Coq in command-line mode : coqtop -I src -R theories Tuto0
 - Loading the prover infrastructure inside Coq : Require Import Tuto0.Loader.
 
+
+
+
+See https://github.com/pascalschreck/MatroidIncidenceProver for the implementation of the saturation procedure and the generation of the Coq script (calls "main file.stat").
+
 See also : https://github.com/ProjectiveGeometry/ProjectiveGeometry
 
-
-See https://github.com/pascalschreck/MatroidIncidenceProver for the implementation of the saturation procedure and the generation of the Coq script (Using prouver-pascal directory at the moment, calls "main file.stat").
 
 # TODO
 - ignore hypotheses which are not of the form rk(?e)=?v
