@@ -275,8 +275,13 @@ let pprove () =
     let raw_list = Tacmach.New.pf_hyps_types gl (*(Id.t * types) list*) in
     let points = (mk_string (List.map Names.Id.to_string (List.rev (list_of_points gl env sigma raw_list)))) in 
     let ranks = myflatten (List.map (fun (i,t) -> interp_hyp_or_concl gl env sigma t) raw_list) in
-    let conc = (interp_hyp_or_concl gl env sigma concl) in 
-    let text_to_send =
+    let conc = (interp_hyp_or_concl gl env sigma concl) in
+    (* let _ = if (conc="") then (Feedback.msg_notice (str "error - not a rank equality")) in*)
+    if (conc="") then
+      let _ = (Feedback.msg_notice (str "Error: not a rank equality.")) in
+      Tacticals.New.tclIDTAC 
+    else
+      let text_to_send =
       "context\n  dimension "^(string_of_int dimension)^"\n"^
         "  layers "^(string_of_int layer)^"\nendofcontext\n"^"layer 0\n"^
           " points\n"^

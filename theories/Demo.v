@@ -6,7 +6,7 @@ Locate Point.
 (* a small example *)
 Lemma ex : forall A B C D : Point, forall n m:nat,forall f:nat->nat,
       f(n)=m ->
-      (exists p:nat, n=m) ->
+      (exists p:nat, p=m) ->
     rk(A::B::C::D::nil) = 3 ->
     True ->
     rk(A::C::D::nil) = 2 ->
