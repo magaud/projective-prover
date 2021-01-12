@@ -2,11 +2,15 @@
 -I src/
 
 theories/Loader.v
-theories/Ltac_utils.v
+
 theories/Demo.v
+theories/Demo2.v
+theories/Demo3.v
+
 theories/basic_matroid_list.v
 theories/basic_rank_space_list.v
 theories/lemmas_automation_g.v
+theories/Ltac_utils.v
 
 src/tuto0_main.ml
 src/tuto0_main.mli
