@@ -17,6 +17,21 @@ See https://github.com/pascalschreck/MatroidIncidenceProver for the implementati
 
 See also : https://github.com/ProjectiveGeometry/ProjectiveGeometry
 
+# Scope
+
+The prover deals with goals of the following shape :
+
+Lemma ex2 : forall A B C D:Point,
+    rk(A::D::B::nil) = 3 ->
+    rk(A::C::D::nil) = 2 ->
+    rk(C::A::nil) = 2 ->
+    rk(C::D::nil) = 2 ->
+    rk(A::C::B::nil) = 3.
+Proof.
+
+The conclusion must be of the form rk(e)=n and only variables of type Point and hypotheses of the form rk(e)=n are used. All other variables and hypotheses are ignored by the automatic prover.
+
+
 
 # TODO
 - ignore hypotheses which are not of the form rk(?e)=?v

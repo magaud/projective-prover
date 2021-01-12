@@ -231,20 +231,29 @@ let rec interp_nat gl env sigma c =
       else failwith "error: interp_nat"
    
 let interp_hyp_or_concl gl env sigma c =
-  let _ = if !debug then (Feedback.msg_notice (str "interp_hyp_or_concl")) in
-  let _ =  if !debug then (Feedback.msg_notice (Printer.pr_econstr_env env sigma c)) in 
+  let _ = if !debug then  (Feedback.msg_notice (str "interp_hyp_or_concl")) in
+  let _ = if !debug then (Feedback.msg_notice (Printer.pr_econstr_env env sigma c)) in 
   if isApp sigma c then 
     let (f,a) = destApp sigma c in
-    if Tacmach.New.pf_conv_x gl f (coq_eq ())
-    then 
-      let _ =  if !debug then (Feedback.msg_notice (Printer.pr_econstr_env env sigma (a.(0)))) in 
-      let _ =  if !debug then (Feedback.msg_notice (Printer.pr_econstr_env env sigma (a.(1)))) in
-      let _ =  if !debug then (Feedback.msg_notice (Printer.pr_econstr_env env sigma (a.(2)))) in
-      let r = interp_rk gl env sigma a.(1) in
-      let n = interp_nat gl env sigma a.(2) in
-      r^" : "^(string_of_int n)
+    if Tacmach.New.pf_conv_x gl f (coq_eq ()) then
+      let _ = if !debug then (Feedback.msg_notice (str "bouhbouh")) in
+      let _ = if !debug then (Feedback.msg_notice (Printer.pr_econstr_env env sigma a.(1))) in
+      let _ = if !debug then (Feedback.msg_notice (Printer.pr_econstr_env env sigma  (fst (destApp sigma a.(1))))) in
+      if (isApp sigma a.(1)) then
+        if Tacmach.New.pf_conv_x gl (fst (destApp sigma a.(1))) (coq_rk ())
+        then 
+          let _ =  if !debug then (Feedback.msg_notice (Printer.pr_econstr_env env sigma (a.(0)))) in 
+          let _ =  if !debug then (Feedback.msg_notice (Printer.pr_econstr_env env sigma (a.(1)))) in
+          let _ =  if !debug then (Feedback.msg_notice (Printer.pr_econstr_env env sigma (a.(2)))) in
+          let r = interp_rk gl env sigma a.(1) in
+          let n = interp_nat gl env sigma a.(2) in
+          r^" : "^(string_of_int n)
+        else
+        ""
     else
+      let _ = if !debug then (Feedback.msg_notice (Printer.pr_econstr_env env sigma c)) in 
       ""
+    else ""
   else ""
 
 let rec myflatten l = 

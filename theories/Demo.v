@@ -4,6 +4,22 @@ Require Import Ltac_utils.
 Locate Point.
 
 (* a small example *)
+Lemma ex : forall A B C D : Point, forall n m:nat,forall f:nat->nat,
+      f(n)=m ->
+      (exists p:nat, n=m) ->
+    rk(A::B::C::D::nil) = 3 ->
+    True ->
+    rk(A::C::D::nil) = 2 ->
+    rk(A::C::nil) = 2 ->
+    rk(C::D::nil) = 2 ->
+    (exists e:Point, rk(C::D::e::nil)=7) -> 
+    rk(A::B::C::nil) = 3.
+Proof.
+  intros.
+  pprove.
+  Require Import pprove_ex.
+  solve_using LP1P2P3.
+Qed.
 
 Lemma ex1 : forall A B C D:Point,
     rk(A::B::D::nil) = 3 ->
