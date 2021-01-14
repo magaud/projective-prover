@@ -10,8 +10,7 @@ Work in progress, works with Coq 8.12.2 (December 2020).
 - launching Coq in command-line mode : coqtop -I src -R theories Tuto0
 - Loading the prover infrastructure inside Coq : Require Import Tuto0.Loader.
 
-
-
+Available tactic : pprove. or pprove 4.
 
 See https://github.com/pascalschreck/MatroidIncidenceProver for the implementation of the saturation procedure and the generation of the Coq script (calls "main file.stat").
 
@@ -33,7 +32,10 @@ The conclusion must be of the form rk(e)=n and only variables of type Point and 
 
 
 
+
 # TODO
 - ignore hypotheses which are not of the form rk(?e)=?v
 
 - replace "find_reference" with "Coqlib.lib_ref"
+
+- removes the call to "Vernacstate.Declare.get_current_proof_name"
