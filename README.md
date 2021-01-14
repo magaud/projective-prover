@@ -37,4 +37,4 @@ See also : https://github.com/ProjectiveGeometry/ProjectiveGeometry
 
 - replace "find_reference" with "Coqlib.lib_ref"
 
-- removes the call to "Vernacstate.Declare.get_current_proof_name"
+- remove the call to "Vernacstate.Declare.get_current_proof_name"
