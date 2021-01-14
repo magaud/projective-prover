@@ -12,10 +12,6 @@ Work in progress, works with Coq 8.12.2 (December 2020).
 
 Available tactic : pprove. or pprove 4.
 
-See https://github.com/pascalschreck/MatroidIncidenceProver for the implementation of the saturation procedure and the generation of the Coq script (calls "main file.stat").
-
-See also : https://github.com/ProjectiveGeometry/ProjectiveGeometry
-
 # Scope
 
 The prover deals with goals of the following shape :
@@ -31,6 +27,9 @@ Proof.
 The conclusion must be of the form rk(e)=n and only variables of type Point and hypotheses of the form rk(e)=n are used. All other variables and hypotheses are ignored by the automatic prover.
 
 
+# Links and related work
+See https://github.com/pascalschreck/MatroidIncidenceProver for the implementation of the saturation procedure and the generation of the Coq script (calls "main file.stat").
+See also : https://github.com/ProjectiveGeometry/ProjectiveGeometry
 
 
 # TODO
