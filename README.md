@@ -16,7 +16,7 @@ Available tactic : pprove. or pprove 4.
 
 The prover deals with goals of the following shape :
 
-Lemma ex2 : forall A B C D:Point,
+Lemma ex2 : forall A B C D:Point,<p>
     rk(A::D::B::nil) = 3 ->
     rk(A::C::D::nil) = 2 ->
     rk(C::A::nil) = 2 ->
