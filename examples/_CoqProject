@@ -12,6 +12,8 @@ monday.v
 simple_lemma.v
 s.v
 
+DG_proof.v # Pappus -> DG
+
 dg2pappusAlt1l.v # DG -> Pappus
 
 #examples 4D (definitions and settings are inlined) 

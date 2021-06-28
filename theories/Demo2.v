@@ -3,6 +3,8 @@ Require Import Ltac_utils.
 
 (* DG -> Pappus *)
 
+(*
+
 Lemma DG2Pappus : forall O A B C Ap Bp Cp P X Y Z Q A1 B1 Ap1 Bp1 R : Point,
     rk(O:: A :: B :: C :: nil) = 2 ->
     rk(O:: Ap :: Bp :: Cp :: nil) = 2 ->
@@ -43,3 +45,4 @@ Proof.
   solve_using LP9P10P11.
 Qed.
   
+*)

@@ -1,33 +1,24 @@
 Require Export basic_rank_space_list.
 Require Import Lia.
+(*
+Lemma matroid1_b_useful : forall (l : list Point) (m : nat), length l <= m -> rk l <= m.
+Proof.
+intros.
+assert(HH := matroid1_b l).
+lia.
+Qed.
 
-Ltac clear_ineg_rk :=
-repeat match goal with
-| H : rk _ >= _ |- _ => clear H
-| H : rk _ <= _ |- _ => clear H
-end.
-
-Ltac clear_all_rk :=
-repeat match goal with
-| H : rk _ = _ |- _ => clear H
-| H : rk _ >= _ |- _ => clear H
-| H : rk _ <= _ |- _ => clear H
-end.
-
-Ltac equalize_pts :=
-repeat match goal with
-| H : rk (?X0 :: ?X1 :: nil) = 1 |- _ => 
-          let HH := fresh in assert(HH := couple_rk2 X0 X1 H);clear H;rewrite HH
-end.
-
-Ltac eliminate_hyps :=
-repeat match goal with
-| H : rk ?X = _, H0 : rk ?X >= _ |- _ => clear H0
-| H : rk ?X = _, H0 : rk ?X <= _ |- _ => clear H0
-| H : rk ?X >= _, H0 : rk ?X >= _ |- _ => clear H
-| H : rk ?X <= _, H0 : rk ?X <= _ |- _ => clear H
-| H : rk ?X >= ?Y, H0 : rk ?X <= ?Y |- _ =>  let HH := fresh in assert(HH : rk X = Y) by (lia)
-end.
+Lemma matroid3_useful : forall e e' ei : list Point,
+ incl ei (list_inter e e') ->
+ rk(e ++ e') + rk(ei) <= rk(e) + rk(e').
+Proof.
+intros.
+assert (rk (e ++ e') + rk (list_inter e e') <= rk e + rk e').
+apply matroid3.
+assert (rk (ei) <= rk (list_inter e e')).
+apply matroid2;auto.
+lia.
+Qed.
 
 Lemma le_S_sym : forall n m : nat,
 n >= S m -> n >= m.
@@ -62,4 +53,5 @@ solve[apply matroid1_b_useful2;simpl;repeat constructor
 |apply le_S_sym;apply le_S_sym;apply H0
 |apply le_S_sym;apply le_S_sym;apply le_S_sym;apply H0
 ].
+*)
 

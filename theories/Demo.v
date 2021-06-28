@@ -17,6 +17,8 @@ Lemma ex : forall A B C D : Point, forall n m:nat,forall f:nat->nat,
 Proof.
   intros.
   pprove.
+  Pwd.
+  Locate Library pprove_ex.
   Require Import pprove_ex.
   solve_using LP1P2P3.
 Qed.
@@ -30,7 +32,7 @@ Lemma ex1 : forall A B C D:Point,
 Proof.
   intros.
   (* call the prover *)
-  pprove.
+  pprove soft.
   Require Import pprove_ex1.
   solve_using LP1P2P3. 
 Qed.
@@ -45,7 +47,7 @@ Lemma ex2 : forall A B C D:Point,
 Proof.
   intros.
   (* call the prover *)
-  pprove.
+  pprove soft.
   Require Import pprove_ex2.
   solve_using LP1P2P3. 
 Qed.
@@ -56,8 +58,8 @@ rk(A :: C ::  nil) = 2 -> rk(A :: B :: D ::  nil) = 2 -> rk(C :: D ::  nil) = 2 
 rk(A :: C :: D ::  nil) = 2 -> rk(C :: A ::  nil) = 2.
 Proof.
   intros.
-  pprove.
-  Require Import pprove_ex3.
+  pprove soft.
+  Require Import  pprove_ex3.
   solve_using LP1P3. 
 Qed.
 
@@ -99,8 +101,8 @@ forall rbB : rk(b:: B:: nil)=2,
 Proof.
   unfold triple.
   intros.
-  pprove.
-  Require Import pprove_desargues. 
+  pprove soft.
+  Require Import  pprove_desargues. 
   solve_using LP7P8P9.
 Qed.
   

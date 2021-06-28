@@ -1,3 +1,3 @@
 val message : string
 
-val pprove : unit -> unit Proofview.tactic
+val pprove : bool -> int -> unit Proofview.tactic

@@ -37,7 +37,7 @@ let coq_rk () =
   EConstr.of_constr (Globnames.printable_constr_of_global x)
 
 (* the following 2 variables will be instantiated by the arguments of the tactic *)             
-let dimension = 3
+(*let dimension = 3*)
 let layer = 1
           
 let rec list_of_points gl env sigma l =
@@ -112,26 +112,41 @@ let my_vernac_require from import qidl =
   in let modrefl = List.map locate qidl 
   in Library.require_library_from_dirpath ~lib_resolver modrefl import
  *)
-let send_text name text_to_send =
+let rec next_name name =
+  let already_exists = Sys.file_exists ("theories/pprove_"^name^".v") && Sys.file_exists ("theories/pprove_"^name^".vo")
+  in if already_exists
+     then next_name (name^"a")
+     else name
+  
+let send_text b name text_to_send =
+  (*  let new_file_name = "theories/pprove_"^name in *)
+  (*let _ = if !debug then (Feedback.msg_notice (str new_file_name)) in *)
   let already_exists = Sys.file_exists ("theories/pprove_"^name^".vo") in
-  if already_exists
+  if already_exists && b
   then let _ = Feedback.msg_notice (str ("Already computed and ready to be reused. In case it fails, remove the file theories/pprove_"^name^".vo."))
        in Tacticals.New.tclIDTAC
   else
+    let new_name = next_name name in 
+    let _ = if !debug then (Feedback.msg_notice (str "hard proof: building a new proof...")) in
+(*    let cmd1 = "rm -f theories/pprove_"^name^".v" in
+    let cmd2 = "rm -f theories/pprove_"^name^".vo" in
+    let _ = Unix.system cmd1 in 
+    let _ = Unix.system cmd2 in *)
+    (*    let _ = (Feedback.msg_notice (str "hard proof : existing files removed")) in*)
   (* let _ = Unix.chdir ("theories") in *)
-  let input_file = "theories/draft_"^name in
-  let result_file = "theories/pprove_"^name in 
-  let c = open_out input_file in
+  let result_file = "theories/pprove_"^new_name in
+  (*  let result_file = "theories/pprove_"^name in *)
+  let c = open_out result_file in
   let _ = output_string c text_to_send in
   let _ = flush c in
   let _ = close_out c in
   let prover_name = "/Users/magaud/MatroidIncidenceProver/matroidbasedIGprover/matroid_C_Coq/DevC/bin/main" in
 (* alternative prover available:  /Users/magaud/MatroidIncidenceProver/matroidbasedIGprover/matroid_C_Coq/DevC/bin/main *)
   (*let prover_name = "/Users/magaud/prouveur-pascal/bin/main" in *)
-  let _ = Unix.system (prover_name^" "^input_file^ " > /dev/null 2> /dev/null") in 
+  let _ = Unix.system (prover_name^" "^result_file^ " > /dev/null 2> /dev/null") in 
   (*let cmd = Filename.quote_command "echo" ~stdout:(result_file^".v") ["Require Import lemmas_automation_g."] in
   let _ = Unix.system(cmd) in*)
-  let _ = Unix.system ("cat "^input_file^".v >> "^result_file^".v") in
+  (*  let _ = Unix.system ("cat "^input_file^".v >> "^result_file^".v") in*)
 
   let _ = Unix.system("grep Lemma "^result_file^".v | awk '{print $2}' > tgvqsd48") in
   let _ = Unix.system("tail -1 tgvqsd48 > tgvqsd49") in 
@@ -143,24 +158,47 @@ let send_text name text_to_send =
   (*  let _ = Unix.system ("echo Hint Resolve "^lemma_name^" : ranks. >> "^result_file^".v") in*)
 
   (*  let _  = Unix.chdir("..") in *)
-  let cmd = Filename.quote_command "coqc" ["-q"; "-I"; "src"; "-R"; "theories"; "Tuto0";(result_file^".v")] in
+  (*  let _ = Unix.system("rm -f "^result_file^".vo") in *)
+  let cmd = Filename.quote_command "coqc" ["-q"; "-I"; "src"; "-R"; "theories/"; "Tuto0";(result_file^".v")] in
   let _ = Unix.system(cmd) in
-  let _ = Unix.system("ls "^result_file^".v") in
-  let _ = Unix.system("ls "^result_file^".vo") in
+  (*let _ = Unix.sleepf(1.5) in 
+  let lp = Loadpath.get_load_paths () in
+  let _ = List.map (function l -> Feedback.msg_notice (Loadpath.pp l)) lp in 
+  let _ = Loadpath.remove_load_path "/Users/magaud/projective-prover/theories" in
+  let _ = let open Loadpath in Loadpath.add_vo_path {unix_path="/Users/magaud/projective-prover/theories"; coq_path=Libnames.dirpath_of_string "Tuto0"; implicit=true; has_ml=false;recursive=false} in   *)
+  
+  let _ = Unix.system("ls -l "^result_file^".v") in
+  let _ = Unix.system("ls -l "^result_file^".vo") in
+  let _ = Unix.system("ls -l "^result_file^".vok") in
+  let _ = Unix.system("ls -l "^result_file^".vos") in
+  
+  let _ = Feedback.msg_notice (str result_file) in 
+  let _ = Feedback.msg_notice (str "removed .vo file and recompiled it successfully") in
+  let lp' = Loadpath.get_load_paths () in
+  let _ = List.map (function l -> Feedback.msg_notice (Loadpath.pp l)) lp' in 
+  let _ = Unix.system("rm -f "^result_file^".out") in
+
+  
   let (a,b) = match (String.split_on_char '/' result_file) with [a;b] -> (a,b) | _ -> failwith "erreur" in
-  let _ = Unix.system("rm -f "^input_file) in
-  let _ = Unix.system("rm -f "^input_file^".out") in
-  let _ = Unix.system("rm -f "^input_file^".v") in
+  (*  let _ = Unix.system("rm -f "^input_file) in*)
+
+  (*let _ = Unix.system("rm -f "^input_file^".v") in*)
   
 
-  let _ = (Feedback.msg_notice (str ("Proofs are available in file "^result_file^".v. Please run the followings commands/tactics to complete the proof:\n Require Import "^b^". \n solve_using "^lemma_name^". ") ))
-   (*
+  let _ = (Feedback.msg_notice
+             (str ("Proofs are available in file "^result_file^".v. Please run the followings commands/tactics to complete the proof:\n Require Import "^b^". \n solve_using "^lemma_name^". ") )) in 
   let _ = (Feedback.msg_notice (str "require import blabla")) in
-    let (a,b) = match (String.split_on_char '/' result_file) with [a;b] -> (a,b) | _ -> failwith "erreur" in
-  let qidl = [(Libnames.qualid_of_string b)] in 
-  
-  let _ = my_vernac_require None (Some true) qidl in *)
-  (* let _ = Library.require_library_from_dirpath [ (Stm.get_ldir ()), (result_file^".v")) ] (Some true) in *)
+  let (a,b) = match (String.split_on_char '/' result_file) with [a;b] -> (a,b) | _ -> failwith "erreur" in
+  let qidl = [(Libnames.qualid_of_string (b(*^".v"*)))] in
+  let _ = (Feedback.msg_notice (str "global error mesg ?")) in
+  let _ = Nametab.global (match qidl with [] -> failwith "oups" | b::bs -> b) in
+    let _ = (Feedback.msg_notice (str "end !")) in
+  (*let ck = Some (Libnames.qualid_of_dirpath (*loc:Loc.ToplevelInput*) (Libnames.dirpath_of_string "Tuto0")) in*)
+  (*  let _ = Vernacentries.vernac_require ck (Some true) qidl in*)
+  (*  let _ = push_modtype (Until 10) in *)
+
+    (* let _ (*lr*) = Loadpath.try_locate_absolute_library in *)
+  (*let _ = Library.require_library_from_dirpath lr [ ((Stm.get_ldir ()), (result_file^".v")) ] (Some true) in*)
  
 (*
 VtDefault(fun () ->
@@ -171,8 +209,9 @@ VtDefault(fun () ->
             None (*(Some (Libnames.qualid_of_string ("Tuto0")))*)
             (Some false)
             [(Libnames.qualid_of_string b)] in*)
-(*  (Feedback.msg_notice (str "success"))*)
-  in Tacticals.New.tclIDTAC
+  (*  (Feedback.msg_notice (str "success"))*)
+   let _ = (Feedback.msg_notice (str "almost done !")) in 
+  Tacticals.New.tclIDTAC
    
 let rec aff gl env sigma l =
   match l with
@@ -261,7 +300,8 @@ let rec myflatten l =
             [] -> ""
           | x::xs -> if x="" then myflatten xs else x^"\n"^(myflatten xs);;
   
-let pprove () =
+let pprove b dimension =
+  (*  if b then *)
   let _ = if !debug then Feedback.msg_notice (str "proving...") in
   Proofview.Goal.enter
     begin fun gl ->
@@ -305,7 +345,7 @@ let pprove () =
       let v = interp_nat gl env sigma n in
       let _ =  (Feedback.msg_notice (str (string_of_int v))) in*)
     let _ =  if !debug then (Feedback.msg_notice (str (interp_hyp_or_concl gl env sigma concl))) in
-    let _ = send_text proof_name text_to_send in
+    let _ = send_text b proof_name text_to_send in
     (*let ml_load_path, vo_load_path = build_load_path opts in
     let injections = injection_commands opts in
     let stm_options = opts.config.stm_flags in*)
@@ -345,7 +385,11 @@ Tacticals.New.tclIDTAC
     end
     (* val load_vernac : echo:bool -> check:bool -> interactive:bool ->
   state:   State.t -> string -> State.t *)
+ (* else
+    let _ = (Feedback.msg_notice (str "hard, not doing anything yet !")) in 
 
+      Tacticals.New.tclIDTAC*)
+  
     (*
 context
       dimension 3

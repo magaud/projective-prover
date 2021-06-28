@@ -54,6 +54,7 @@ my_inS;induction l;my_inS.
 Qed.
 
 (*** Definition list_inter ***)
+
 Definition list_inter l1 l2 := filter (fun x : Point => Inb x l2) l1.
 
 Lemma list_inter_split :
@@ -115,6 +116,7 @@ apply matroid2;auto.
 lia.
 Qed.
 
+(*
 Lemma couple_equal : forall A B, rk(A :: B :: nil) = rk(B :: A :: nil).
 Proof.
 intros;apply rk_morph;my_inO.
@@ -273,11 +275,12 @@ Lemma quadruple_equal_23 : forall A B C D, rk(A :: B :: C :: D :: nil) = rk(D ::
 Proof.
 intros;apply rk_morph;my_inO.
 Qed.
-
+*)
 Ltac clear_all_rk :=
 repeat match goal with
 | H : rk _ = _ |- _ => clear H
 | H : rk _ >= _ |- _ => clear H
 | H : rk _ <= _ |- _ => clear H
 end.
+
 

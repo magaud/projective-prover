@@ -1,7 +1,10 @@
 (*Require Import ssreflect ssrfun ssrbool.*)
-Require Import Setoid.
-Require Import List.
+From Tuto0 Require Export Loader.
+Require Import Ltac_utils.
 
+(*Require Import Setoid.
+Require Import List.
+*)
 Parameter Point : Type.
 Parameter Line: Type.
 
@@ -21,6 +24,12 @@ Definition collinear A B C :=  exists l, incid_lp A l /\ incid_lp B l /\ incid_l
 
 Lemma collinear_spec : forall A B C, collinear A B C <-> rk3 A B C = 2.
 Admitted.
+
+
+Lemma non_collinear_spec : forall A B C, ~collinear A B C <-> rk3 A B C = 3.
+Admitted.
+
+
 
 Lemma eq_spec : forall A B, A = B <-> rk2 A B = 1.
 Admitted.
@@ -73,6 +82,7 @@ Ltac on_all_lines l :=
 
 Ltac translate :=
   intros;
+  repeat rewrite non_collinear_spec in *;
   repeat rewrite collinear_spec in *;
   repeat rewrite diff_spec in *;
   repeat rewrite eq_spec in *;
@@ -95,7 +105,10 @@ Theorem Desargues :
 collinear alpha beta gamma.
 Proof.
   translate.
-(* énoncé de Desargues avec des rangs *)
+
+  intuition.
+
+  (* énoncé de Desargues avec des rangs *)
 
   (* TODO *)
 
@@ -109,10 +122,3 @@ Definition dist_3p  (A B C :Point) : bool := (negb (eqP A B)) && (negb (eqP A C)
 Definition dist_3l (A B C :Line) : bool :=
   (negb (eqL A B)) && (negb (eqL A C)) && (negb (eqL B C)).
 
-
-
-(* Local Variables: *)
-(* coq-prog-name: "/Users/magaud/.opam/4.06.0/bin/coqtop" *)
-(* coq-load-path: (("/Users/magaud/math-comp/mathcomp" "mathcomp") ("." "Top") ) *)
-(* suffixes: .v *)
-(* End: *)

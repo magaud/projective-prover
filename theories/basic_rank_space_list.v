@@ -33,50 +33,6 @@ assert(HH2 := HH0 HH1).
 lia.
 Qed.
 
-Lemma rk_couple_2 : forall A B, rk(A :: B :: nil) <= 2.
-Proof.
-intros.
-apply matroid1_b_useful.
-intuition.
-Qed.
-
-Lemma rk_couple : forall A B : Point,~ A = B -> rk(A :: B :: nil) = 2.
-Proof.
-intros.
-assert(HH := rk_couple_2 A B).
-assert(HH0 := rk_couple_ge A B H).
-lia.
-Qed.
-
-Lemma rk_triple_3 : forall A B C : Point, rk (A :: B :: C :: nil) <= 3.
-Proof.
-intros.
-apply matroid1_b_useful.
-intuition.
-Qed.
-
-Lemma couple_rk1 : forall A B, rk(A :: B :: nil) = 2 -> ~ A = B.
-Proof.
-intros.
-intro.
-rewrite H0 in H.
-assert(HH : equivlist (B :: B :: nil) (B :: nil));[my_inO|].
-rewrite HH in H.
-assert(HH0 := rk_singleton_1 B).
-lia.
-Qed.
-
-Lemma couple_rk2 : forall A B, rk(A :: B :: nil) = 1 -> A = B.
-Proof.
-intros.
-case_eq(eq_dec A B).
-intros.
-assumption.
-intros.
-assert(HH := rk_couple A B n).
-lia.
-Qed.
-
 Lemma rule_1 : forall A B AiB, forall MA MB mAiB, 
 rk(A) <= MA -> rk(B) <= MB -> rk(AiB) >= mAiB -> incl AiB (list_inter A B) ->
 rk(A ++ B) <= MA + MB - mAiB.
@@ -162,16 +118,58 @@ rk(A :: E :: G :: nil) = 2 -> rk(B :: D :: G :: nil) = 2 ->
 rk(A :: F :: H :: nil) = 2 -> rk(C :: D :: H :: nil) = 2 ->
 rk(B :: F :: I :: nil) = 2 -> rk(C :: E :: I :: nil) = 2 -> rk(G :: H :: I :: nil) = 2.
 
-Ltac rk_couple_triple :=
-  match goal with
 
-| H : rk(?A :: ?B :: nil) = 2 |- rk(?A :: ?B :: nil) = 2 => assumption
-| H : rk(?B :: ?A :: nil) = 2 |- rk(?A :: ?B :: nil) = 2 => rewrite couple_equal in H;assumption
+Lemma matroid1_b_useful : forall (l : list Point) (m : nat), length l <= m -> rk l <= m.
+Proof.
+intros.
+assert(HH := matroid1_b l).
+lia.
+Qed.
 
-| H : rk(?A :: ?B :: ?C :: nil) = _ |-  rk(?A :: ?B :: ?C :: nil) = _ => assumption
-| H : rk(?A :: ?C :: ?B :: nil) = _ |-  rk(?A :: ?B :: ?C :: nil) = _ => rewrite <-triple_equal_1 in H;assumption
-| H : rk(?B :: ?A :: ?C :: nil) = _ |-  rk(?A :: ?B :: ?C :: nil) = _ => rewrite <-triple_equal_2 in H;assumption
-| H : rk(?B :: ?C :: ?A :: nil) = _ |-  rk(?A :: ?B :: ?C :: nil) = _ => rewrite <-triple_equal_3 in H;assumption
-| H : rk(?C :: ?A :: ?B :: nil) = _ |-  rk(?A :: ?B :: ?C :: nil) = _ => rewrite <-triple_equal_4 in H;assumption
-| H : rk(?C :: ?B :: ?A :: nil) = _ |-  rk(?A :: ?B :: ?C :: nil) = _ => rewrite <-triple_equal_5 in H;assumption
-end.
+Lemma matroid3_useful : forall e e' ei : list Point,
+ incl ei (list_inter e e') ->
+ rk(e ++ e') + rk(ei) <= rk(e) + rk(e').
+Proof.
+intros.
+assert (rk (e ++ e') + rk (list_inter e e') <= rk e + rk e').
+apply matroid3.
+assert (rk (ei) <= rk (list_inter e e')).
+apply matroid2;auto.
+lia.
+Qed.
+
+Lemma le_S_sym : forall n m : nat,
+n >= S m -> n >= m.
+Proof.
+intros.
+intuition.
+Qed.
+
+Lemma eq_le_incl : forall n m, n = m -> n <= m.
+Proof.
+  intros; lia.
+Qed.
+
+Ltac solve_hyps_max H H0 :=
+solve[apply matroid1_b_useful;simpl;repeat constructor
+|apply rk_upper_dim
+|apply eq_le_incl;apply H
+|apply eq_le_incl;apply eq_sym;apply H
+|apply H0
+|apply le_S;apply H0
+|apply le_S;apply le_S;apply H0
+|apply le_S;apply le_S;apply le_S;apply H0
+].
+
+Ltac solve_hyps_min H H0:=
+solve[apply matroid1_b_useful2;simpl;repeat constructor
+|apply matroid1_a
+|apply eq_le_incl;apply H
+|apply eq_le_incl;apply eq_sym;apply H
+|apply H0
+|apply le_S_sym;apply H0
+|apply le_S_sym;apply le_S_sym;apply H0
+|apply le_S_sym;apply le_S_sym;apply le_S_sym;apply H0
+].
+
+

@@ -15,7 +15,6 @@ Proof.
   solve_using LP1P2P3.
 Qed.
 
-
 Lemma LP1P2P4 : forall P1 P2 P3 P4 P5 P6 P7 P8 ,
 rk(P2 :: P3 ::  nil) = 2 -> rk(P2 :: P4 ::  nil) = 2 -> rk(P3 :: P4 ::  nil) = 2 ->
 rk(P1 :: P2 :: P3 :: P4 ::  nil) = 2 -> rk(P1 :: P2 :: P5 ::  nil) = 3 -> rk(P1 :: P3 :: P6 ::  nil) = 3 ->

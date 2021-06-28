@@ -2,13 +2,23 @@
 -I src/
 
 theories/Loader.v
+theories/Loader4.v
 
 theories/Demo.v
 theories/Demo2.v
 theories/Demo3.v
+theories/Demo4.v
+theories/Demo5.v # 4D
 
+theories/translate.v
+
+theories/DG_proof.v
+theories/DG_existential.v
+ 
 theories/basic_matroid_list.v
 theories/basic_rank_space_list.v
+theories/basic_rank_4_list.v
+
 theories/lemmas_automation_g.v
 theories/Ltac_utils.v
 

@@ -1,5 +1,67 @@
-Require Export lemmas_automation_g.
-Require Import DG_proof.
+From Tuto0 Require Export Loader.
+Require Import Ltac_utils.
+(*Require Import DG_proof.*)
+
+Lemma dg : forall A A' B B' C C' R P Q N M L N' M' L' O alpha beta gamma,
+rk(B ::  C' ::  P ::  L :: nil) =  2 -> (* line a *)
+rk(B' ::  C ::  P ::  L' :: nil) =  2 -> (* line a' *)
+rk(A' ::  Q ::  C ::  M :: nil) =  2 -> (* line b *)
+rk(A ::  Q ::  C' ::  M' :: nil) =  2 -> (* line b' *)
+rk(R ::  A ::  B' ::  N :: nil) =  2 -> (* line c *)
+rk(R ::  A' ::  B ::  N' :: nil) =  2 -> (* line c' *)
+rk(A' ::  B ::  C ::  C' ::  P ::  Q :: nil) =  4 -> (* a & b *)
+rk(A ::  B ::  B' ::  C' ::  P ::  R :: nil) =  4 -> (* a & c *)
+rk(A ::  A' ::  B' ::  C  ::  Q ::  R :: nil) =  4 -> (* b & c *)
+rk(A ::  B' ::  C ::  C' ::  P ::  Q :: nil) =  4 -> (* a' & b' *)
+rk(A' ::  B ::  B' ::  C ::  P ::  R :: nil) =  4 -> (* a' & c' *)
+rk(A ::  A' ::  B ::  C' ::  Q ::  R :: nil) =  4 -> (* b' & c' *)
+rk(N ::  M ::  L ::  O :: nil) =  2 -> (* line e *)
+rk(N' ::  M' ::  L' ::  O :: nil) =  2 -> (* line e *)
+rk(A ::  C' ::  P ::  Q ::  B ::  M' :: nil) =  3 -> (* plane [a & b'] & M' *)
+rk(B ::  C' ::  P ::  N' ::  M' ::  L' :: nil) =  4 -> (* a & e' *)
+rk(A' ::  C ::  Q ::  N' ::  M' ::  L' :: nil) =  4 -> (* b & e' *)
+rk(A ::  B' ::  R ::  N' ::  M' ::  L' :: nil) =  4 -> (* c & e' *)
+rk(B' ::  C ::  P ::  N ::  M ::  L :: nil) =  4 -> (* a' & e *)
+rk(A ::  C' ::  Q ::  N ::  M ::  L :: nil) =  4 -> (* b' & e *)
+rk(A' ::  B ::  R ::  N ::  M ::  L :: nil) =  4 -> (* c' & e *)
+rk(N ::  L' ::  alpha :: nil) =  2 -> rk(N' ::  L ::  alpha :: nil) =  2 -> (* premier point Pappus *)
+rk(M' ::  L ::  beta :: nil) =  2 -> rk(M ::  L' ::  beta :: nil) =  2 -> (* deuxième point Pappus *)
+rk(N ::  M' ::  gamma :: nil) =  2 -> rk(N' ::  M ::  gamma :: nil) =  2 -> (* troisième point Pappus *)
+rk(alpha::beta::gamma::nil) = 2 -> 
+rk(A ::  C' ::  Q ::  M' :: nil) =  2. (* M' appartient à b' *)
+Proof.
+  intros.
+  pprove soft.
+  Require Import pprove_dg.
+  solve_using LP1P6P9P14.
+Qed.
+
+                         (*
+
+Lemma dg : forall A A' B B' C C' R P Q 
+                  N M L N' M' L' O : Point,
+rk(B ::  C' ::  P ::  L :: nil) = 2 -> (* line a *)
+rk(B' ::  C ::  P ::  L' :: nil) = 2 -> (* line a' *)
+rk(A' ::  Q ::  C ::  M :: nil) = 2 -> (* line b *)
+rk(A ::  Q ::  C' ::  M' :: nil) = 2 -> (* line b' *)
+rk(R ::  A ::  B' ::  N :: nil) = 2 -> (* line c *)
+rk(R ::  A' ::  B ::  N' :: nil) = 2 -> (* line c' *)
+rk(A' ::  B ::  C ::  C' ::  P ::  Q :: nil) = 4 -> (* a & b *)
+rk(A ::  B ::  B' ::  C' ::  P ::  R :: nil) = 4 -> (* a & c *)
+rk(A ::  A' ::  B' ::  C  ::  Q ::  R :: nil) = 4 -> (* b & c *)
+rk(A ::  B' ::  C ::  C' ::  P ::  Q :: nil) = 4 -> (* a' & b' *)
+rk(A' ::  B ::  B' ::  C ::  P ::  R :: nil) = 4 -> (* a' & c' *)
+rk(A ::  A' ::  B ::  C' ::  Q ::  R :: nil) = 4 -> (* b' & c' *)
+rk(N ::  M ::  L ::  O :: nil) = 2 -> (* line e *)
+rk(N' ::  M' ::  L' ::  O :: nil) = 2 -> (* line e' *)
+rk(A ::  C' ::  P ::  Q ::  B ::  M' :: nil) = 3 -> (* plane [a & b'] & M' *)
+rk(B ::  C' ::  P ::  N' ::  M' ::  L' :: nil) = 4 -> (* a & e' *)
+rk(A' ::  C ::  Q ::  N' ::  M' ::  L' :: nil) = 4 -> (* b & e' *)
+rk(A ::  B' ::  R ::  N' ::  M' ::  L' :: nil) = 4 -> (* c & e' *)
+rk(B' ::  C ::  P ::  N ::  M ::  L :: nil) = 4 -> (* a' & e *)
+rk(A ::  C' ::  Q ::  N ::  M ::  L :: nil) = 4 -> (* b' & e *)
+rk(A' ::  B ::  R ::  N ::  M ::  L :: nil) = 4 -> (* c' & e *)
+rk(A ::  C' ::  Q :: M' :: nil) = 2. (* M' belongs to b' *) *)
 
 Require Import lemma00.
 

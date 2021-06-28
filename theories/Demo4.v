@@ -7,8 +7,14 @@ Lemma plane_of_2_lines : forall T U V X Y Z,
     rk(T::U::X::Y::nil)=3 ->
     exists R:Point, rk(T::U::V::R::nil)=2 /\ rk(X::Y::Z::R::nil)=2.
 Proof.
-  intros.
-  pprove.
-  Require Import plane_of_2_lines.
-  solve_using L.
-Qed.
+    intros.
+    assert (H1': rk (T :: U :: X :: Y :: nil) <=3) by lia.
+    destruct (rk_inter _ _ _ _ H1') as [R [Hi1 Hi2]].
+    exists R; split.
+    pprove soft.
+    Require Import pprove_plane_of_2_lines.
+    solve_using LP1P2P3P7. 
+(*    pprove hard.*)
+    Require Import pprove_plane_of_2_linesa. 
+    solve_using LP4P5P6P7. 
+ Qed.
