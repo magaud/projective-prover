@@ -38,24 +38,32 @@ coqtop -I src -R theories Tuto0
 Require Import Tuto0.Loader.
 ```
 
-The main tactic is ````pprove```.
-Ìf no argument is given to the tactic, we assume the dimension is 3. Alternatively, the tactic can be followed by an integer, which specifies the dimension of the considered space.
+The  main tactic is pprove. Ìf no argument is given to the tactic, we
+assume the dimension is 3. Alternatively, the tactic can be followed
+by an integer, which specifies the dimension of the considered space.
 
+```
+pprove. (* deals with 3D goals *)
 
+````
+or
+```
+pprove 4. (* deals with 4D goals *)
+````
 
 # Links and related work
-- https://github.com/pascalschreck/MatroidIncidenceProver (the implementation of the saturation procedure and the generation of the Coq script - our plugin performs the following call: "main file.stat").
+- https://github.com/pascalschreck/MatroidIncidenceProver
+The implementation of the saturation procedure and the generation of
+the Coq script. Our plugin performs the following call: "main file.stat".
 - https://github.com/ProjectiveGeometry/ProjectiveGeometry
 - http://www.theses.fr/2019STRAD020
 
 
 ## TODO
-- Coq internals
-* ignore hypotheses which are not of the form rk(?e)=?v
+* Coq internals
+  * ignore hypotheses which are not of the form rk(?e)=?v
+  * replace "find_reference" with "Coqlib.lib_ref"
+  * remove the call to "Vernacstate.Declare.get_current_proof_name"
 
-* replace "find_reference" with "Coqlib.lib_ref"
-
-* remove the call to "Vernacstate.Declare.get_current_proof_name"
-
-- Proofs
-* make a proof of DG property which creates points interactively and use the general instance to solve the goal
+* Proofs
+  * make a proof of DG property which creates points interactively and use the general instance to solve the goal
