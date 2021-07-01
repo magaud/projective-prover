@@ -1,11 +1,11 @@
-## projective-prover : a plugin to use David Braun's automatic prover from projective geometry in Coq
-Nicolas Magaud
+## projective-prover : a Coq plugin to use David Braun's automatic prover for projective geometry
+
 
 * [General info](#general-info)
 * [Scope](#scope)
 * [Quick start](#quick-start)
 * [Links and related work](#links)
-* [TODO] (#todo)
+* [TODO](#todo)
 
 # General Info
 
@@ -38,12 +38,15 @@ coqtop -I src -R theories Tuto0
 Require Import Tuto0.Loader.
 ```
 
-Available tactics are : pprove. or pprove 4.
+The main tactic is ````pprove```.
+Ìf no argument is given to the tactic, we assume the dimension is 3. Alternatively, the tactic can be followed by an integer, which specifies the dimension of the considered space.
+
 
 
 # Links and related work
-See https://github.com/pascalschreck/MatroidIncidenceProver for the implementation of the saturation procedure and the generation of the Coq script (our plugin performs the following call: "main file.stat").<br>
-See also : https://github.com/ProjectiveGeometry/ProjectiveGeometry
+- https://github.com/pascalschreck/MatroidIncidenceProver (the implementation of the saturation procedure and the generation of the Coq script - our plugin performs the following call: "main file.stat").
+- https://github.com/ProjectiveGeometry/ProjectiveGeometry
+- http://www.theses.fr/2019STRAD020
 
 
 ## TODO
