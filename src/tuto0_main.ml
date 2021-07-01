@@ -135,17 +135,17 @@ let send_text b name text_to_send =
     (*    let _ = (Feedback.msg_notice (str "hard proof : existing files removed")) in*)
   (* let _ = Unix.chdir ("theories") in *)
   let result_file = "theories/pprove_"^new_name in
-  (*  let result_file = "theories/pprove_"^name in *)
   let c = open_out result_file in
   let _ = output_string c text_to_send in
   let _ = flush c in
   let _ = close_out c in
   let prover_name = "/Users/magaud/MatroidIncidenceProver/matroidbasedIGprover/matroid_C_Coq/DevC/bin/main" in
-(* alternative prover available:  /Users/magaud/MatroidIncidenceProver/matroidbasedIGprover/matroid_C_Coq/DevC/bin/main *)
   (*let prover_name = "/Users/magaud/prouveur-pascal/bin/main" in *)
-  let _ = Unix.system (prover_name^" "^result_file^ " > /dev/null 2> /dev/null") in 
+  let _ = Unix.system (prover_name^" "^result_file^ " > /dev/null 2> /dev/null") in
+  let _ =  if !debug then Feedback.msg_notice (str ("Name:"^(result_file^".v"))) in 
+  let _ = Unix.system ("sed -i.bak '1 s/.*/Require Import lemmas_automation_g./' "^result_file^".v") in 
   (*let cmd = Filename.quote_command "echo" ~stdout:(result_file^".v") ["Require Import lemmas_automation_g."] in
-  let _ = Unix.system(cmd) in*)
+  let _ = Unix.system(cmd) in *)
   (*  let _ = Unix.system ("cat "^input_file^".v >> "^result_file^".v") in*)
 
   let _ = Unix.system("grep Lemma "^result_file^".v | awk '{print $2}' > tgvqsd48") in
@@ -309,9 +309,13 @@ let pprove b dimension =
     (*  let s = Proofview_monad.StateStore.empty in (*Proofview_monad.StateStore.with_empty_state gl in *)*)
     let proof_name = Names.Id.to_string (Vernacstate.Declare.get_current_proof_name ()) in 
     let _ = if !debug then (Feedback.msg_notice (str proof_name)) in
+    
     let env = Proofview.Goal.env gl in
     let sigma = Tacmach.New.project gl in
     let concl = Tacmach.New.pf_concl gl in
+
+    let proof_uid = Goal.uid (Proofview.Goal.goal gl) (* warning : using Proofview.Goal.goal should be avoided *) in
+    let _ = if !debug then Feedback.msg_notice (str proof_uid) in 
     let raw_list = Tacmach.New.pf_hyps_types gl (*(Id.t * types) list*) in
     let points = (mk_string (List.map Names.Id.to_string (List.rev (list_of_points gl env sigma raw_list)))) in 
     let ranks = myflatten (List.map (fun (i,t) -> interp_hyp_or_concl gl env sigma t) raw_list) in
@@ -345,7 +349,7 @@ let pprove b dimension =
       let v = interp_nat gl env sigma n in
       let _ =  (Feedback.msg_notice (str (string_of_int v))) in*)
     let _ =  if !debug then (Feedback.msg_notice (str (interp_hyp_or_concl gl env sigma concl))) in
-    let _ = send_text b proof_name text_to_send in
+    let _ = send_text b (proof_name^"_"^proof_uid) text_to_send in
     (*let ml_load_path, vo_load_path = build_load_path opts in
     let injections = injection_commands opts in
     let stm_options = opts.config.stm_flags in*)

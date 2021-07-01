@@ -32,17 +32,17 @@ END
 
 TACTIC EXTEND pprover_tactic_no_arg
 | [ "pprove" ] ->
-  { let _ = Feedback.msg_notice (str "calling the prover for projective geometry (and checking whether the proof already exists)...") in
+  { let _ = Feedback.msg_notice (str "Calling Bip (and checking if a candidate proof already exists)...") in
     Tuto0_main.pprove true 3 }
 | [ "pprove" int(n) ] ->
-  { let _ = Feedback.msg_notice (str "calling the prover for projective geometry (and checking whether the proof already exists)...") in
+  { let _ = Feedback.msg_notice (str "calling the prover for projective geometry with the specified dimension (and checking whether the proof already exists)...") in
     Tuto0_main.pprove true n }
-| [ "pprove" "soft"] ->
+(*| [ "pprove" "soft"] ->
   { let _ = Feedback.msg_notice (str "calling the prover for projective geometry (and checking whether the proof already exists)...") in
     Tuto0_main.pprove true 3 }
 | [ "pprove" "hard"] ->
   { let _ = Feedback.msg_notice (str "calling the prover for projective geometry...") in
-    Tuto0_main.pprove false 3 }
+    Tuto0_main.pprove false 3 }*)
 END
 (*
 TACTIC EXTEND pprover_tactic_s

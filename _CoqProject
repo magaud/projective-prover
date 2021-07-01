@@ -8,12 +8,12 @@ theories/Demo.v
 theories/Demo2.v
 theories/Demo3.v
 theories/Demo4.v
-theories/Demo5.v # 4D
+#theories/Demo5.v # 4D
 
 theories/translate.v
 
 theories/DG_proof.v
-theories/DG_existential.v
+#theories/DG_existential.v TODO
  
 theories/basic_matroid_list.v
 theories/basic_rank_space_list.v

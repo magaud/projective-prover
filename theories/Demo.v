@@ -18,8 +18,8 @@ Proof.
   intros.
   pprove.
   Pwd.
-  Locate Library pprove_ex.
-  Require Import pprove_ex.
+  Locate Library pprove_ex_49.
+  Require Import pprove_ex_49.
   solve_using LP1P2P3.
 Qed.
 
@@ -32,8 +32,8 @@ Lemma ex1 : forall A B C D:Point,
 Proof.
   intros.
   (* call the prover *)
-  pprove soft.
-  Require Import pprove_ex1.
+  pprove.
+  Require Import pprove_ex1_66.
   solve_using LP1P2P3. 
 Qed.
 Check ex1.
@@ -47,8 +47,8 @@ Lemma ex2 : forall A B C D:Point,
 Proof.
   intros.
   (* call the prover *)
-  pprove soft.
-  Require Import pprove_ex2.
+  pprove.
+  Require Import pprove_ex2_90.
   solve_using LP1P2P3. 
 Qed.
 Check ex2.
@@ -58,8 +58,8 @@ rk(A :: C ::  nil) = 2 -> rk(A :: B :: D ::  nil) = 2 -> rk(C :: D ::  nil) = 2 
 rk(A :: C :: D ::  nil) = 2 -> rk(C :: A ::  nil) = 2.
 Proof.
   intros.
-  pprove soft.
-  Require Import  pprove_ex3.
+  pprove.
+  Require Import  pprove_ex3_123.
   solve_using LP1P3. 
 Qed.
 
@@ -101,8 +101,8 @@ forall rbB : rk(b:: B:: nil)=2,
 Proof.
   unfold triple.
   intros.
-  pprove soft.
-  Require Import  pprove_desargues. 
+  pprove.
+  Require Import  pprove_desargues_212. 
   solve_using LP7P8P9.
 Qed.
   

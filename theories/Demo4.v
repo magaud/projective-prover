@@ -11,10 +11,11 @@ Proof.
     assert (H1': rk (T :: U :: X :: Y :: nil) <=3) by lia.
     destruct (rk_inter _ _ _ _ H1') as [R [Hi1 Hi2]].
     exists R; split.
-    pprove soft.
-    Require Import pprove_plane_of_2_lines.
+    pprove.
+    Require Import pprove_plane_of_2_lines_197.
     solve_using LP1P2P3P7. 
-(*    pprove hard.*)
-    Require Import pprove_plane_of_2_linesa. 
+    (*    pprove hard.*)
+    pprove.
+    Require Import pprove_plane_of_2_lines_198. 
     solve_using LP4P5P6P7. 
  Qed.

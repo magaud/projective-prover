@@ -33,8 +33,12 @@ See also : https://github.com/ProjectiveGeometry/ProjectiveGeometry
 
 
 # TODO
-- ignore hypotheses which are not of the form rk(?e)=?v
+- Coq internals
+* ignore hypotheses which are not of the form rk(?e)=?v
 
-- replace "find_reference" with "Coqlib.lib_ref"
+* replace "find_reference" with "Coqlib.lib_ref"
 
-- remove the call to "Vernacstate.Declare.get_current_proof_name"
+* remove the call to "Vernacstate.Declare.get_current_proof_name"
+
+- Proofs
+* make a proof of DG property which creates points interactively and use the general instance to solve the goal

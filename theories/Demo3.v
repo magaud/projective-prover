@@ -11,7 +11,7 @@ rk(P1 :: P2 :: P3 ::  nil) = 2.
 Proof.
   intros.
   pprove.
-  Require Import pprove_LP1P2P3.  
+  Require Import pprove_LP1P2P3_104.  
   solve_using LP1P2P3.
 Qed.
 
@@ -25,7 +25,7 @@ rk(P1 :: P2 :: P4 ::  nil) = 2.
 Proof.
   intros.
   pprove.
-  Require Import pprove_LP1P2P4.  
+  Require Import pprove_LP1P2P4_188.  
   solve_using LP1P2P4.
 Qed.
 
