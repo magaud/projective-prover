@@ -1,4 +1,4 @@
-## projective-prover : a Coq plugin to use David Braun's automatic prover for projective geometry
+## projective-prover: a Coq plugin to use David Braun's automatic prover for projective geometry
 
 
 * [General info](#general-info)
@@ -15,7 +15,7 @@ Work in progress, works with Coq 8.13.2 (May 2021).
 
 # Scope
 
-The prover deals with goals of the following shape :
+The prover deals with goals of the following shape:
 ```
 Lemma ex2 : forall A B C D:Point,
     rk(A::D::B::nil) = 3 ->
@@ -29,11 +29,11 @@ The conclusion must be of the form rk(e)=n and only variables of type Point and 
 
 
 # Quick start
-- launching Coq in command-line mode :
+- launching Coq in command-line mode:
 ```
 coqtop -I src -R theories Tuto0
 ```
-- Loading the prover infrastructure inside Coq :
+- Loading the prover infrastructure inside Coq:
 ```
 Require Import Tuto0.Loader.
 ```
@@ -45,11 +45,11 @@ by an integer, which specifies the dimension of the considered space.
 ```
 pprove. (* deals with 3D goals *)
 
-````
+```
 or
 ```
 pprove 4. (* deals with 4D goals *)
-````
+```
 
 # Links and related work
 - https://github.com/pascalschreck/MatroidIncidenceProver
@@ -67,3 +67,9 @@ the Coq script. Our plugin performs the following call: "main file.stat".
 
 * Proofs
   * make a proof of DG property which creates points interactively and use the general instance to solve the goal
+  * make sure that, when a file .v is created, its compilation is successful
+  * take advantage of geometric properties to reduce the number of points to consider
+  ```
+  pprove using A B C D.
+  ```
+  
