@@ -14,7 +14,6 @@ Proof.
     pprove.
     Require Import pprove_plane_of_2_lines_197.
     solve_using LP1P2P3P7. 
-    (*    pprove hard.*)
     pprove.
     Require Import pprove_plane_of_2_lines_198. 
     solve_using LP4P5P6P7. 

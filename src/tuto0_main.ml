@@ -166,14 +166,14 @@ let send_text b name text_to_send =
   let _ = List.map (function l -> Feedback.msg_notice (Loadpath.pp l)) lp in 
   let _ = Loadpath.remove_load_path "/Users/magaud/projective-prover/theories" in
   let _ = let open Loadpath in Loadpath.add_vo_path {unix_path="/Users/magaud/projective-prover/theories"; coq_path=Libnames.dirpath_of_string "Tuto0"; implicit=true; has_ml=false;recursive=false} in   *)
-  
+  (*
   let _ = Unix.system("ls -l "^result_file^".v") in
   let _ = Unix.system("ls -l "^result_file^".vo") in
   let _ = Unix.system("ls -l "^result_file^".vok") in
   let _ = Unix.system("ls -l "^result_file^".vos") in
-  
-  let _ = Feedback.msg_notice (str result_file) in 
-  let _ = Feedback.msg_notice (str "removed .vo file and recompiled it successfully") in
+  *)
+  let _ = if !debug then Feedback.msg_notice (str result_file) in 
+  let _ = if !debug then Feedback.msg_notice (str "removed .vo file and recompiled it successfully") in
   let lp' = Loadpath.get_load_paths () in
   let _ = List.map (function l -> Feedback.msg_notice (Loadpath.pp l)) lp' in 
   let _ = Unix.system("rm -f "^result_file^".out") in
@@ -187,12 +187,12 @@ let send_text b name text_to_send =
 
   let _ = (Feedback.msg_notice
              (str ("Proofs are available in file "^result_file^".v. Please run the followings commands/tactics to complete the proof:\n Require Import "^b^". \n solve_using "^lemma_name^". ") )) in 
-  let _ = (Feedback.msg_notice (str "require import blabla")) in
+  let _ = if !debug then (Feedback.msg_notice (str "require import blabla")) in
   let (a,b) = match (String.split_on_char '/' result_file) with [a;b] -> (a,b) | _ -> failwith "erreur" in
   let qidl = [(Libnames.qualid_of_string (b(*^".v"*)))] in
-  let _ = (Feedback.msg_notice (str "global error mesg ?")) in
+  let _ = if !debug then (Feedback.msg_notice (str "global error mesg ?")) in
   let _ = Nametab.global (match qidl with [] -> failwith "oups" | b::bs -> b) in
-    let _ = (Feedback.msg_notice (str "end !")) in
+  let _ = (Feedback.msg_notice (str "end !")) in
   (*let ck = Some (Libnames.qualid_of_dirpath (*loc:Loc.ToplevelInput*) (Libnames.dirpath_of_string "Tuto0")) in*)
   (*  let _ = Vernacentries.vernac_require ck (Some true) qidl in*)
   (*  let _ = push_modtype (Until 10) in *)

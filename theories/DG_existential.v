@@ -1,42 +1,229 @@
 From Tuto0 Require Export Loader.
 Require Import Ltac_utils.
-(*Require Import DG_proof.*)
 
-Lemma dg : forall A A' B B' C C' R P Q N M L N' M' L' O alpha beta gamma,
-rk(B ::  C' ::  P ::  L :: nil) =  2 -> (* line a *)
-rk(B' ::  C ::  P ::  L' :: nil) =  2 -> (* line a' *)
-rk(A' ::  Q ::  C ::  M :: nil) =  2 -> (* line b *)
-rk(A ::  Q ::  C' ::  M' :: nil) =  2 -> (* line b' *)
-rk(R ::  A ::  B' ::  N :: nil) =  2 -> (* line c *)
-rk(R ::  A' ::  B ::  N' :: nil) =  2 -> (* line c' *)
-rk(A' ::  B ::  C ::  C' ::  P ::  Q :: nil) =  4 -> (* a & b *)
-rk(A ::  B ::  B' ::  C' ::  P ::  R :: nil) =  4 -> (* a & c *)
-rk(A ::  A' ::  B' ::  C  ::  Q ::  R :: nil) =  4 -> (* b & c *)
-rk(A ::  B' ::  C ::  C' ::  P ::  Q :: nil) =  4 -> (* a' & b' *)
-rk(A' ::  B ::  B' ::  C ::  P ::  R :: nil) =  4 -> (* a' & c' *)
-rk(A ::  A' ::  B ::  C' ::  Q ::  R :: nil) =  4 -> (* b' & c' *)
-rk(N ::  M ::  L ::  O :: nil) =  2 -> (* line e *)
-rk(N' ::  M' ::  L' ::  O :: nil) =  2 -> (* line e *)
-rk(A ::  C' ::  P ::  Q ::  B ::  M' :: nil) =  3 -> (* plane [a & b'] & M' *)
-rk(B ::  C' ::  P ::  N' ::  M' ::  L' :: nil) =  4 -> (* a & e' *)
-rk(A' ::  C ::  Q ::  N' ::  M' ::  L' :: nil) =  4 -> (* b & e' *)
-rk(A ::  B' ::  R ::  N' ::  M' ::  L' :: nil) =  4 -> (* c & e' *)
-rk(B' ::  C ::  P ::  N ::  M ::  L :: nil) =  4 -> (* a' & e *)
-rk(A ::  C' ::  Q ::  N ::  M ::  L :: nil) =  4 -> (* b' & e *)
-rk(A' ::  B ::  R ::  N ::  M ::  L :: nil) =  4 -> (* c' & e *)
-rk(N ::  L' ::  alpha :: nil) =  2 -> rk(N' ::  L ::  alpha :: nil) =  2 -> (* premier point Pappus *)
-rk(M' ::  L ::  beta :: nil) =  2 -> rk(M ::  L' ::  beta :: nil) =  2 -> (* deuxième point Pappus *)
-rk(N ::  M' ::  gamma :: nil) =  2 -> rk(N' ::  M ::  gamma :: nil) =  2 -> (* troisième point Pappus *)
-rk(alpha::beta::gamma::nil) = 2 -> 
-rk(A ::  C' ::  Q ::  M' :: nil) =  2. (* M' appartient à b' *)
+(* Pappus -> DG *)
+
+Lemma Pappus2DG : 
+forall Oo A B C Ap Bp Cp X Y Z M N Sp T U V R,
+ rk(Oo :: A :: nil) = 2 -> rk(Oo :: B :: nil) = 2 
+-> rk(A :: B :: nil) = 2 -> rk(Oo :: C :: nil) = 2 
+-> rk(A :: C :: nil) = 2 -> rk(B :: C :: nil) = 2 
+-> rk(Oo :: A :: B :: C :: nil) = 2     (* line a*)
+-> rk(Oo :: Ap :: nil) = 2  
+-> rk(Oo :: A :: Ap :: nil) = 3         (* a != e*)
+-> rk(Oo :: Bp :: nil) = 2 
+-> rk(Ap :: Bp :: nil) = 2
+-> rk(Oo :: Cp :: nil) = 2 
+-> rk(Ap :: Cp :: nil) = 2 
+-> rk(Bp :: Cp :: nil) = 2 ->
+rk(Oo :: Ap :: Bp :: Cp :: nil) = 2     (* line e*)
+-> rk(B :: Ap :: X :: nil) = 2 (* Pappus point X *)  
+-> rk(A :: Bp :: X :: nil) = 2
+-> rk(C :: Ap :: Y :: nil) = 2 (* Pappus point Y *) 
+-> rk(A :: Cp :: Y :: nil) = 2
+-> rk(C :: Bp :: Z :: nil) = 2 (* Pappus point Z *)
+-> rk(B :: Cp :: Z :: nil) = 2
+-> rk(X :: Y :: Z :: nil) = 2    (* Pappus prop. *)
+-> rk(Ap :: M :: Sp :: nil) = 2 ->     (* line b *)
+rk(Oo :: A :: B :: C :: Ap :: M :: Sp :: nil) = 4
+-> rk(Bp :: N :: T :: nil) = 2 ->      (* line c *)
+rk(Oo :: A :: B :: C :: Bp :: N :: T :: nil) = 4 
+-> rk(C :: Sp :: T :: nil) = 2 ->      (* line d *)
+rk(Oo :: C :: Ap :: Bp :: Cp :: Sp :: T :: nil) = 4
+-> rk(Ap :: Bp :: M :: N :: Sp :: T :: nil) = 4
+-> rk(A :: M :: U :: nil) = 2 ->       (* line f *)
+rk(Oo :: A :: Ap :: Bp :: Cp :: M :: U :: nil) = 4
+-> rk(A :: C :: M :: Sp :: T :: U :: nil) = 4
+-> rk(B :: N :: V :: nil) = 2 ->       (* line g *)
+rk(Oo :: B :: Ap :: Bp :: Cp :: N :: V :: nil) = 4 
+-> rk(B :: C :: N :: Sp :: T :: V :: nil) = 4 
+-> rk(Cp :: U :: V :: nil) = 2         (* line h *)
+-> rk(Oo :: A :: B :: C :: Cp :: U :: V :: nil) = 4
+-> rk(A :: B :: M :: N :: U :: V :: nil) = 4 
+-> rk(Ap :: Cp :: M :: Sp :: U :: V :: nil) = 4
+-> rk(Bp :: Cp :: N :: T :: U :: V :: nil) = 4 
+-> rk(Y :: M :: R :: nil) = 2         (* point R *)
+-> rk(Z :: N :: R :: nil) = 2 
+->                                  (*coplanarity*)
+rk(C :: Cp :: Sp :: T :: U :: V :: nil) = 3.
 Proof.
   intros.
-  pprove soft.
-  Require Import pprove_dg.
-  solve_using LP1P6P9P14.
+(*  pprove.*)
+  Require Import pprove_Pappus2DG_347.
+  solve_using LP4P7P13P14P15P16.
+Qed.
+Check Pappus2DG.
+
+
+Lemma Pappus2DG_noXYZ : 
+forall Oo A B C Ap Bp Cp M N Sp T U V, 
+ rk(Oo :: A :: nil) = 2 -> rk(Oo :: B :: nil) = 2 
+-> rk(A :: B :: nil) = 2 -> rk(Oo :: C :: nil) = 2 
+-> rk(A :: C :: nil) = 2 -> rk(B :: C :: nil) = 2 
+-> rk(Oo :: A :: B :: C :: nil) = 2     (* line a*)
+-> rk(Oo :: Ap :: nil) = 2  
+-> rk(Oo :: A :: Ap :: nil) = 3         (* a != e*)
+-> rk(Oo :: Bp :: nil) = 2 
+-> rk(Ap :: Bp :: nil) = 2
+-> rk(Oo :: Cp :: nil) = 2 
+-> rk(Ap :: Cp :: nil) = 2 
+-> rk(Bp :: Cp :: nil) = 2 ->
+rk(Oo :: Ap :: Bp :: Cp :: nil) = 2     (* line e*)
+(*-> rk(B :: Ap :: X :: nil) = 2 (* Pappus point X *)  
+-> rk(A :: Bp :: X :: nil) = 2
+-> rk(C :: Ap :: Y :: nil) = 2 (* Pappus point Y *) 
+-> rk(A :: Cp :: Y :: nil) = 2
+-> rk(C :: Bp :: Z :: nil) = 2 (* Pappus point Z *)
+-> rk(B :: Cp :: Z :: nil) = 2
+-> rk(X :: Y :: Z :: nil) = 2    (* Pappus prop. *)*)
+-> rk(Ap :: M :: Sp :: nil) = 2 ->     (* line b *)
+rk(Oo :: A :: B :: C :: Ap :: M :: Sp :: nil) = 4
+-> rk(Bp :: N :: T :: nil) = 2 ->      (* line c *)
+rk(Oo :: A :: B :: C :: Bp :: N :: T :: nil) = 4 
+-> rk(C :: Sp :: T :: nil) = 2 ->      (* line d *)
+rk(Oo :: C :: Ap :: Bp :: Cp :: Sp :: T :: nil) = 4
+-> rk(Ap :: Bp :: M :: N :: Sp :: T :: nil) = 4
+-> rk(A :: M :: U :: nil) = 2 ->       (* line f *)
+rk(Oo :: A :: Ap :: Bp :: Cp :: M :: U :: nil) = 4
+-> rk(A :: C :: M :: Sp :: T :: U :: nil) = 4
+-> rk(B :: N :: V :: nil) = 2 ->       (* line g *)
+rk(Oo :: B :: Ap :: Bp :: Cp :: N :: V :: nil) = 4 
+-> rk(B :: C :: N :: Sp :: T :: V :: nil) = 4 
+-> rk(Cp :: U :: V :: nil) = 2         (* line h *)
+-> rk(Oo :: A :: B :: C :: Cp :: U :: V :: nil) = 4
+-> rk(A :: B :: M :: N :: U :: V :: nil) = 4 
+-> rk(Ap :: Cp :: M :: Sp :: U :: V :: nil) = 4
+-> rk(Bp :: Cp :: N :: T :: U :: V :: nil) = 4 
+(*-> rk(Y :: M :: R :: nil) = 2         (* point R *)
+-> rk(Z :: N :: R :: nil) = 2 *)
+->                                  (*coplanarity*)
+rk(C :: Cp :: Sp :: T :: U :: V :: nil) = 3.
+Proof.
+intros.
+Check rk_pappus.
+Check rk_inter.
+assert (HX:rk (B :: Ap :: A :: Bp :: nil) <= 3).
+assert (rk (B :: Ap :: A :: Bp :: nil) = 3).
+Require Import pprove_Pappus2DG_noXYZ_576. 
+solve_using LP2P3P5P6.
+lia.
+destruct (rk_inter B Ap A Bp HX) as [X [HX1 HX2]].
+
+assert (HY:rk (C :: Ap :: A :: Cp :: nil) <= 3).
+assert (rk (C :: Ap :: A :: Cp :: nil) = 3).
+Require Import pprove_Pappus2DG_noXYZ_18969. 
+ solve_using LP2P4P5P7.
+lia.
+destruct (rk_inter C Ap A Cp HY) as [Y [HY1 HY2]].
+
+assert (HZ:rk (B :: Cp :: C :: Bp :: nil) <= 3).
+assert (rk (B :: Cp :: C :: Bp :: nil) = 3).
+Require Import pprove_Pappus2DG_noXYZ_39020. 
+solve_using LP3P4P6P7.
+lia.
+destruct (rk_inter B Cp C Bp HZ) as [Z [HZ1 HZ2]].
+assert (Hpappus : rk (X :: Y :: Z :: nil) = 2).
+
+
+(*
+rk_pappus
+     : forall A B C D E F G H I : Point,
+       rk (A :: B :: nil) = 2 ->
+       rk (A :: C :: nil) = 2 ->
+       rk (A :: D :: nil) = 2 ->
+       rk (A :: E :: nil) = 2 ->
+       rk (A :: F :: nil) = 2 ->
+       rk (B :: C :: nil) = 2 ->
+       rk (B :: D :: nil) = 2 ->
+       rk (B :: E :: nil) = 2 ->
+       rk (B :: F :: nil) = 2 ->
+       rk (C :: D :: nil) = 2 ->
+       rk (C :: E :: nil) = 2 ->
+       rk (C :: F :: nil) = 2 ->
+       rk (D :: E :: nil) = 2 ->
+       rk (D :: F :: nil) = 2 ->
+       rk (E :: F :: nil) = 2 ->
+       rk (A :: B :: C :: nil) = 2 ->
+       rk (D :: E :: F :: nil) = 2 ->
+       rk (A :: E :: G :: nil) = 2 ->
+       rk (B :: D :: G :: nil) = 2 ->
+       rk (A :: F :: H :: nil) = 2 ->
+       rk (C :: D :: H :: nil) = 2 ->
+       rk (B :: F :: I :: nil) = 2 -> rk (C :: E :: I :: nil) = 2 -> rk (G :: H :: I :: nil) = 2
+*)
+
+eapply (rk_pappus) with (A:=A) (B:=B) (C:=C) (D:=Ap) (E:=Bp) (F:=Cp); try assumption. 
+Require Import pprove_Pappus2DG_noXYZ_60841. 
+solve_using LP2P5.
+Require Import pprove_Pappus2DG_noXYZ_60842. 
+solve_using LP2P6.
+Require Import pprove_Pappus2DG_noXYZ_60843. 
+ solve_using LP2P7. 
+admit.
+admit.
+admit.
+admit.
+admit.
+admit.
+admit.
+admit.
+
+assert (HR:rk (Y :: M :: Z :: N :: nil) <= 3).
+assert (rk (Y :: M :: Z :: N :: nil) = 3).
+pprove.
+Require Import pprove_Pappus2DG_noXYZ_129851. 
+ solve_using LP1P5P8P9P11P15P16.
+admit. (*
+pprove.
+Require Import pprove_Pappus2DG_noXYZ_39020. 
+solve_using LP3P4P6P7.*)
+lia.
+destruct (rk_inter Y M Z N HR) as [R [HR1 HR2]].
+apply Pappus2DG with (Oo:=Oo) (A:=A) (B:=B) (Ap:=Ap) (Bp:=Bp) (X:=X) (Y:=Y) (Z:=Z) (M:=M) (N:=N) (R:=R); assumption.
 Qed.
 
-                         (*
+
+
+Ltac revert_all_relevant_hyps P1 P2 :=
+
+  repeat match goal with H:(rk (P1::_)= ?a) |- _ => revert H 
+| H:(rk (_::P1::_)= ?a) |- _ => revert H 
+| H:(rk (_::_::P1::_)= ?a) |- _ => revert H 
+| H:(rk (_::_::_::P1::_)= ?a) |- _ => revert H 
+| H:(rk (_::_::_::_::P1::_)= ?a) |- _ => revert H 
+| H:(rk (_::_::_::_::_::P1::_)= ?a) |- _ => revert H 
+| H:(rk (_::_::_::_::_::_::P1::_)= ?a) |- _ => revert H
+| H:(rk (_::_::_::_::_::_::_::P1::_)= ?a) |- _ => revert H
+| H:(rk (_::_::_::_::_::_::_::_::P1::_)= ?a) |- _ => revert H
+         end;
+            
+  repeat match goal with H:(rk (P2::_)= ?a) |- _ => revert H 
+| H:(rk (_::P2::_)= ?a) |- _ => revert H 
+| H:(rk (_::_::P2::_)= ?a) |- _ => revert H 
+| H:(rk (_::_::_::P2::_)= ?a) |- _ => revert H 
+| H:(rk (_::_::_::_::P2::_)= ?a) |- _ => revert H 
+| H:(rk (_::_::_::_::_::P2::_)= ?a) |- _ => revert H 
+| H:(rk (_::_::_::_::_::_::P2::_)= ?a) |- _ => revert H
+| H:(rk (_::_::_::_::_::_::_::P2::_)= ?a) |- _ => revert H
+| H:(rk (_::_::_::_::_::_::_::_::P2::_)= ?a) |- _ => revert H
+         end.
+
+revert_all_relevant_hyps A Bp.
+Ltac clear_rk_hyps := match goal with
+                        H:rk(_)=_ |- _ => clear H
+                      | H:rk(_)<=_ |- _ => clear H
+                                                                        
+                      end.
+repeat clear_rk_hyps.
+Ltac clear_useless_points := repeat match goal with X:Point |- _ => clear X end.
+clear_useless_points.
+clear Z.
+pprove.
+
+
+
+
+(*
 
 Lemma dg : forall A A' B B' C C' R P Q 
                   N M L N' M' L' O : Point,
@@ -564,9 +751,3 @@ admit. (* rk (C2 :: Idg :: B2 :: Q :: nil) = 3*)
     by (apply eq_le_ge; split; apply matroid2; my_inO).
   rewrite Hrk; assumption.
 Qed.
-
-(* Local Variables: *)
-(* coq-prog-name: "/Users/magaud/.opam/4.09.0/bin/coqtop" *)
-(* coq-load-path: (("../DevCoq/Dev" "DevCoq.Dev") ) *)
-(* suffixes: .v *)
-(* End: *)

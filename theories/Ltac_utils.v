@@ -79,3 +79,6 @@ Ltac expr_to_apply A t l :=
 
 Ltac solve_using t :=
  intros; adapt_goal collect_points; repeat adapt_hyp collect_points; let v := expr_to_apply Point t collect_points in intros; eapply v; eassumption.
+
+Ltac solve_using_hyp t :=
+ intros; adapt_goal collect_points; repeat adapt_hyp collect_points; let v := expr_to_apply Point t collect_points in intros; eapply v; eassumption.

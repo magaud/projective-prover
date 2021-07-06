@@ -13,7 +13,8 @@ theories/Demo4.v
 theories/translate.v
 
 theories/DG_proof.v
-#theories/DG_existential.v TODO
+theories/DG_full_existentials.v
+#theories/DG_existential.v 
  
 theories/basic_matroid_list.v
 theories/basic_rank_space_list.v

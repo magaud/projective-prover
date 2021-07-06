@@ -1,8 +1,6 @@
 From Tuto0 Require Export Loader.
 Require Import Ltac_utils.
 
-Locate Point.
-
 (* a small example *)
 Lemma ex : forall A B C D : Point, forall n m:nat,forall f:nat->nat,
       f(n)=m ->
@@ -17,8 +15,10 @@ Lemma ex : forall A B C D : Point, forall n m:nat,forall f:nat->nat,
 Proof.
   intros.
   pprove.
+(*
   Pwd.
   Locate Library pprove_ex_49.
+*)
   Require Import pprove_ex_49.
   solve_using LP1P2P3.
 Qed.
